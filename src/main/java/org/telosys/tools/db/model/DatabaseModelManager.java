@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2008-2013  Telosys project org. ( http://www.telosys.org/ )
+ *  Copyright (C) 2008-2014  Telosys project org. ( http://www.telosys.org/ )
  *
  *  Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,18 +15,14 @@
  */
 package org.telosys.tools.db.model;
 
+import org.telosys.tools.commons.StandardTool;
+import org.telosys.tools.commons.TelosysToolsLogger;
+import org.telosys.tools.db.metadata.*;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.List;
-
-import org.telosys.tools.commons.StandardTool;
-import org.telosys.tools.commons.TelosysToolsLogger;
-import org.telosys.tools.db.metadata.ColumnMetaData;
-import org.telosys.tools.db.metadata.ForeignKeyColumnMetaData;
-import org.telosys.tools.db.metadata.MetaDataManager;
-import org.telosys.tools.db.metadata.PrimaryKeyColumnMetaData;
-import org.telosys.tools.db.metadata.TableMetaData;
 
 public class DatabaseModelManager extends StandardTool
 {
