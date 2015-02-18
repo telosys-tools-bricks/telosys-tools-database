@@ -168,7 +168,7 @@ public class MetaDataManager extends StandardTool
 			String tableNamePattern, String[] tableTypes,
 			String tableNameInclude, String tableNameExclude ) throws SQLException
 	{
-		log("getTables(..., '" + catalog + "', '" + schema + "', '" + tableNamePattern + "', " + tableTypes + ")");
+		log("getTables(..., '" + catalog + "', '" + schema + "', '" + tableNamePattern + "' )");
 		
 	    /*
 	     * JDBC JavaDoc for "getTables":
