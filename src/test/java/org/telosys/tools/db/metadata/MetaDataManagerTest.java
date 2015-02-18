@@ -2,12 +2,14 @@ package org.telosys.tools.db.metadata;
 
 import java.util.regex.Pattern;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Test;
 
+import static org.junit.Assert.*;
 
-public class MetaDataManagerTest extends TestCase {
+//public class MetaDataManagerTest extends TestCase {
+public class MetaDataManagerTest {
 	
+	@Test
 	public void testIsExcludedTable_patterns_null() {
 		// Given
 		MetaDataManager m = new MetaDataManager(null);
@@ -20,9 +22,10 @@ public class MetaDataManagerTest extends TestCase {
 		boolean isExcluded = m.isExcludedTable(tableName, patternTableNameInclude, patternTableNameExclude);
 		
 		// Then
-		Assert.assertFalse(isExcluded);
+		assertFalse(isExcluded);
 	}
 
+	@Test
 	public void testIsExcludedTable_not_excluded() {
 		// Given
 		MetaDataManager m = new MetaDataManager(null);
@@ -35,9 +38,10 @@ public class MetaDataManagerTest extends TestCase {
 		boolean isExcluded = m.isExcludedTable(tableName, patternTableNameInclude, patternTableNameExclude);
 		
 		// Then
-		Assert.assertFalse(isExcluded);
+		assertFalse(isExcluded);
 	}
 
+	@Test
 	public void testIsExcludedTable_excluded() {
 		// Given
 		MetaDataManager m = new MetaDataManager(null);
@@ -50,9 +54,10 @@ public class MetaDataManagerTest extends TestCase {
 		boolean isExcluded = m.isExcludedTable(tableName, patternTableNameInclude, patternTableNameExclude);
 		
 		// Then
-		Assert.assertTrue(isExcluded);
+		assertTrue(isExcluded);
 	}
 
+	@Test
 	public void testIsExcludedTable_not_included() {
 		// Given
 		MetaDataManager m = new MetaDataManager(null);
@@ -65,9 +70,10 @@ public class MetaDataManagerTest extends TestCase {
 		boolean isExcluded = m.isExcludedTable(tableName, patternTableNameInclude, patternTableNameExclude);
 		
 		// Then
-		Assert.assertTrue(isExcluded);
+		assertTrue(isExcluded);
 	}
 
+	@Test
 	public void testIsExcludedTable_included() {
 		// Given
 		MetaDataManager m = new MetaDataManager(null);
@@ -80,9 +86,10 @@ public class MetaDataManagerTest extends TestCase {
 		boolean isExcluded = m.isExcludedTable(tableName, patternTableNameInclude, patternTableNameExclude);
 		
 		// Then
-		Assert.assertFalse(isExcluded);
+		assertFalse(isExcluded);
 	}
 
+	@Test
 	public void testIsExcludedTable_excluded_and_included() {
 		// Given
 		MetaDataManager m = new MetaDataManager(null);
@@ -95,9 +102,10 @@ public class MetaDataManagerTest extends TestCase {
 		boolean isExcluded = m.isExcludedTable(tableName, patternTableNameInclude, patternTableNameExclude);
 		
 		// Then
-		Assert.assertTrue(isExcluded);
+		assertTrue(isExcluded);
 	}
 
+	@Test
 	public void testIsExcludedTable_excluded_and_not_included() {
 		// Given
 		MetaDataManager m = new MetaDataManager(null);
@@ -110,9 +118,10 @@ public class MetaDataManagerTest extends TestCase {
 		boolean isExcluded = m.isExcludedTable(tableName, patternTableNameInclude, patternTableNameExclude);
 		
 		// Then
-		Assert.assertTrue(isExcluded);
+		assertTrue(isExcluded);
 	}
 
+	@Test
 	public void testIsExcludedTable_not_excluded_and_included() {
 		// Given
 		MetaDataManager m = new MetaDataManager(null);
@@ -125,9 +134,10 @@ public class MetaDataManagerTest extends TestCase {
 		boolean isExcluded = m.isExcludedTable(tableName, patternTableNameInclude, patternTableNameExclude);
 		
 		// Then
-		Assert.assertFalse(isExcluded);
+		assertFalse(isExcluded);
 	}
 
+	@Test
 	public void testIsExcludedTable_not_excluded_and_not_included() {
 		// Given
 		MetaDataManager m = new MetaDataManager(null);
@@ -140,7 +150,7 @@ public class MetaDataManagerTest extends TestCase {
 		boolean isExcluded = m.isExcludedTable(tableName, patternTableNameInclude, patternTableNameExclude);
 		
 		// Then
-		Assert.assertTrue(isExcluded);
+		assertTrue(isExcluded);
 	}
 	
 }
