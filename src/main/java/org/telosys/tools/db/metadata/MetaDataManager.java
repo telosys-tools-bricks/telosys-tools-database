@@ -417,27 +417,101 @@ public class MetaDataManager extends StandardTool
 		
 		Statement stmt = conn.createStatement();
 		
-		String fullName = tableName.trim() ;
-		if ( schemaName != null )
-		{
-			fullName = schemaName.trim() + "." + tableName.trim() ;
-		}
+//		String fullName = tableName.trim() ;
+//		if ( schemaName != null ) {
+//			fullName = schemaName.trim() + "." + tableName.trim() ;
+//		}
+//		
+//		//ResultSet rs = stmt.executeQuery("SELECT * FROM " + fullName + " WHERE 1 = 0");
+//		String sqlRequest = "SELECT * FROM " + fullName + " WHERE 1 = 0" ;
+//		log("execute SQL : '" + sqlRequest + "'");
+//		ResultSet rs = stmt.executeQuery(sqlRequest);
 		
-		ResultSet rs = stmt.executeQuery("SELECT * FROM " + fullName + " WHERE 1 = 0");
-		
-		ResultSetMetaData rsmd = rs.getMetaData();
-		int n = rsmd.getColumnCount();
-		
-		// for each column 
-		for ( int i = 1 ; i < n ; i++)
-		{
-			if ( rsmd.isAutoIncrement(i) ) 
-			{
-				String colName = rsmd.getColumnName(i);
-				result.addLast(colName);
+		ResultSet rs = executeSqlSelect(stmt, schemaName, tableName);
+		if ( rs != null ) {
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int n = rsmd.getColumnCount();
+			
+			// for each column 
+			for ( int i = 1 ; i < n ; i++) {
+				if ( rsmd.isAutoIncrement(i) ) { // if auto-incremented column
+					String colName = rsmd.getColumnName(i);
+					result.addLast(colName);
+				}
 			}
+			
+			rs.close();
 		}
+		
+		stmt.close();
+
 		return result ;
 	}
 
+	private ResultSet executeSqlSelect(Statement stmt, String schemaName, String tableName) {
+		for ( int step = 1 ; step <=3 ; step++ ) {
+			String sqlRequest = buildSqlRequest( schemaName, tableName, step);
+			log("Trying to execute SQL : " + sqlRequest );
+			try {
+				ResultSet rs = stmt.executeQuery(sqlRequest);
+				log("SQL result : OK" );
+				return rs ;
+			} catch (Exception e) { // SQLException and more
+				// Cannot execute 
+				log("SQL result : " + e.getMessage() );
+				// Continue : next step
+			} 
+		}
+		return null ; // Not supposed to happen 
+	}
+	
+	/**
+	 * Build a different kind of request depending on the given 'step' <br>
+	 * - Step #1 : SELECT * FROM   myschema.mytable   WHERE 1 = 0 <br>
+	 * - Step #2 : SELECT * FROM "myschema"."mytable" WHERE 1 = 0 <br>
+	 * - Step #3 : SELECT * FROM 'myschema'.'mytable' WHERE 1 = 0 <br>
+	 * @param schemaName
+	 * @param tableName
+	 * @param step
+	 * @return
+	 */
+	private String buildSqlRequest(String schemaName, String tableName, int step) {
+		String fullTableName = null ;
+		if ( step == 1 ) {
+			fullTableName = buildFullTableName(schemaName, tableName, null);
+		}
+		else if ( step == 2 ) {
+			fullTableName = buildFullTableName(schemaName, tableName, "\"" );
+		}
+		else if ( step == 3 ) {
+			fullTableName = buildFullTableName(schemaName, tableName, "'" );
+		}
+		else {
+			throw new RuntimeException("buildSqlRequest() : invalid step value");
+		}
+		String sqlRequest = "SELECT * FROM " + fullTableName + " WHERE 1 = 0" ;
+		log("SQL request (step="+step+") : " + sqlRequest );
+		return sqlRequest;
+	}
+	
+	private String buildFullTableName(String schemaName, String tableName, String quote) {
+		if ( quote != null ) {
+			// With quote, e.g. "myschema"."mytable"
+			if ( schemaName != null ) {
+				return quote + schemaName.trim() + quote + "." + quote + tableName.trim() + quote;
+			}
+			else {
+				return quote + tableName.trim() + quote ;
+			}
+		}
+		else {
+			// Without quote, e.g. myschema.mytable
+			if ( schemaName != null ) {
+				return schemaName.trim() + "." + tableName.trim() ;
+			}
+			else {
+				return tableName.trim()  ;
+			}
+		}
+	}
 }
