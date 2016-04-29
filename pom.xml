@@ -1,24 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<name>telosys-tools-database</name>
-	<artifactId>telosys-tools-database</artifactId>
-
-	<packaging>jar</packaging>
 
     <parent>
-        <groupId>org.telosys.tools</groupId>
+        <groupId>org.telosys</groupId>
         <artifactId>telosys-tools-parent</artifactId>
         <version>3.0.0</version>
         <relativePath>../telosys-tools-parent/pom.xml</relativePath>
     </parent>
 
+	<name>telosys-tools-database</name>
+	<artifactId>telosys-tools-database</artifactId>
+	<packaging>jar</packaging>
+
 	<dependencies>
 
 		<!-- for compilation -->
 		<dependency>
-			<groupId>org.telosys.tools</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>telosys-tools-commons</artifactId>
             <version>${project.parent.version}</version>
 		</dependency>
