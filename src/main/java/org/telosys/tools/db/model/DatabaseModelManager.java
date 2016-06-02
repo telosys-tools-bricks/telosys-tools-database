@@ -15,20 +15,30 @@
  */
 package org.telosys.tools.db.model;
 
-import org.telosys.tools.commons.StandardTool;
-import org.telosys.tools.commons.TelosysToolsLogger;
-import org.telosys.tools.db.metadata.*;
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.List;
 
-public class DatabaseModelManager extends StandardTool
+import org.telosys.tools.commons.TelosysToolsLogger;
+import org.telosys.tools.db.metadata.ColumnMetaData;
+import org.telosys.tools.db.metadata.ForeignKeyColumnMetaData;
+import org.telosys.tools.db.metadata.MetaDataManager;
+import org.telosys.tools.db.metadata.PrimaryKeyColumnMetaData;
+import org.telosys.tools.db.metadata.TableMetaData;
+
+public class DatabaseModelManager //extends StandardTool
 {
+	private final TelosysToolsLogger logger ;
+//	private void log(String s) {
+//		if (logger != null ) {
+//			logger.log(s);
+//		}
+//	}
 
 	public DatabaseModelManager(TelosysToolsLogger logger) {
-		super(logger);
+		//super(logger);
+		this.logger = logger ;
 	}
 
 	public DatabaseTables getDatabaseTables(Connection con, String catalog, String schema, 
@@ -37,7 +47,8 @@ public class DatabaseModelManager extends StandardTool
 	{
 		DatabaseTables databaseTables = new DatabaseTables();
 		
-		MetaDataManager mgr = new MetaDataManager( this.getLogger() );
+//		MetaDataManager mgr = new MetaDataManager( this.getLogger() );
+		MetaDataManager mgr = new MetaDataManager( this.logger );
 		
 		//--- Get the database Meta-Data
 		DatabaseMetaData dbmd = con.getMetaData();		

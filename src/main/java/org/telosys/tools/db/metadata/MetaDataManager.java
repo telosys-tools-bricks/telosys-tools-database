@@ -26,15 +26,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.telosys.tools.commons.StandardTool;
 import org.telosys.tools.commons.TelosysToolsLogger;
 
-public class MetaDataManager extends StandardTool
+public class MetaDataManager //extends StandardTool
 {
-	public MetaDataManager(TelosysToolsLogger logger) {
-		super(logger);
+	private final TelosysToolsLogger logger ;
+	private void log(String s) {
+		if (logger != null ) {
+			logger.log(s);
+		}
 	}
-
+	
+	public MetaDataManager(TelosysToolsLogger logger) {
+		//super(logger);
+		this.logger = logger ;
+	}
+	
 	//--------------------------------------------------------------------------------------------
 	public List<String> getCatalogs(Connection con ) throws SQLException
 	{
