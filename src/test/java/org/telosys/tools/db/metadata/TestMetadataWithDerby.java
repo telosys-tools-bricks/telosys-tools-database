@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-import org.telosys.tools.commons.ConsoleLogger;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.dbcfg.DatabaseConfiguration;
 import org.telosys.tools.commons.jdbc.ConnectionManager;
+import org.telosys.tools.commons.logger.ConsoleLogger;
 
 public class TestMetadataWithDerby {
 	
