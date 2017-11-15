@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 import org.telosys.tools.commons.TelosysToolsLogger;
 
-public class MetaDataManager //extends StandardTool
+public class MetaDataManager
 {
 	private final TelosysToolsLogger logger ;
 	private void log(String s) {
@@ -38,10 +38,17 @@ public class MetaDataManager //extends StandardTool
 	}
 	
 	public MetaDataManager(TelosysToolsLogger logger) {
-		//super(logger);
 		this.logger = logger ;
 	}
 	
+    public DbInfo getDatabaseInfo(Connection con)  throws SQLException {
+        return getDatabaseInfo(con.getMetaData());
+    }
+    
+    public DbInfo getDatabaseInfo(DatabaseMetaData dbmd)  throws SQLException {
+        return new DbInfo(dbmd);
+    }
+
 	//--------------------------------------------------------------------------------------------
 	public List<String> getCatalogs(Connection con ) throws SQLException
 	{
@@ -179,12 +186,12 @@ public class MetaDataManager //extends StandardTool
 		
 	    /*
 	     * JDBC JavaDoc for "getTables":
-	     * catalog - a catalog name; 
+	     * catalog : a catalog name; 
 	     *     must match the catalog name as it is stored in the database; 
 	     *     "" retrieves those without a catalog; 
 	     *     null means that the catalog name should not be used to narrow the search
 	     *     
-	     * schemaPattern - a schema name pattern; 
+	     * schemaPattern : a schema name pattern; 
 	     *     must match the schema name as it is stored in the database; 
 	     *     "" retrieves those without a schema; 
 	     *     null means that the schema name should not be used to narrow the search 
@@ -373,18 +380,13 @@ public class MetaDataManager //extends StandardTool
 		return list ;
 	}
 
-	//--------------------------------------------------------------------------------------------
 	/**
+	 * Returns the Foreign Key columns
 	 * @param dbmd
-	 * 
 	 * @param catalog
-	 * 
 	 * @param schema
-	 * 
 	 * @param tableName
-	 * 
 	 * @return
-	 * 
 	 * @throws SQLException
 	 */
 	public List<ForeignKeyColumnMetaData> getFKColumns(DatabaseMetaData dbmd, String catalog, String schema, String tableName) 
