@@ -28,17 +28,6 @@ import org.telosys.tools.db.metadata.TableMetaData;
 
 public class DatabaseModelManager
 {
-//	private final TelosysToolsLogger logger ;
-//	private void log(String s) {
-//		if (logger != null ) {
-//			logger.log(s);
-//		}
-//	}
-
-//	public DatabaseModelManager(TelosysToolsLogger logger) {
-//		//super(logger);
-//		this.logger = logger ;
-//	}
 	public DatabaseModelManager() {
 		super();
 	}
