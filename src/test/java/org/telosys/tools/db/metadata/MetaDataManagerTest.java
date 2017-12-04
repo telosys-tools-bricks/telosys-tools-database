@@ -6,13 +6,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-//public class MetaDataManagerTest extends TestCase {
 public class MetaDataManagerTest {
 	
 	@Test
 	public void testIsExcludedTable_patterns_null() {
 		// Given
-		MetaDataManager m = new MetaDataManager(null);
+		MetaDataManager m = new MetaDataManager();
 		
 		String tableName = "abcde";
 		Pattern patternTableNameExclude = null;
@@ -28,7 +27,7 @@ public class MetaDataManagerTest {
 	@Test
 	public void testIsExcludedTable_not_excluded() {
 		// Given
-		MetaDataManager m = new MetaDataManager(null);
+		MetaDataManager m = new MetaDataManager();
 		
 		String tableName = "abcde";
 		Pattern patternTableNameExclude = Pattern.compile("test");
@@ -44,7 +43,7 @@ public class MetaDataManagerTest {
 	@Test
 	public void testIsExcludedTable_excluded() {
 		// Given
-		MetaDataManager m = new MetaDataManager(null);
+		MetaDataManager m = new MetaDataManager();
 		
 		String tableName = "abcde";
 		Pattern patternTableNameExclude = Pattern.compile("a.*");
@@ -60,7 +59,7 @@ public class MetaDataManagerTest {
 	@Test
 	public void testIsExcludedTable_not_included() {
 		// Given
-		MetaDataManager m = new MetaDataManager(null);
+		MetaDataManager m = new MetaDataManager();
 		
 		String tableName = "abcde";
 		Pattern patternTableNameExclude = null;
@@ -76,7 +75,7 @@ public class MetaDataManagerTest {
 	@Test
 	public void testIsExcludedTable_included() {
 		// Given
-		MetaDataManager m = new MetaDataManager(null);
+		MetaDataManager m = new MetaDataManager();
 		
 		String tableName = "abcde";
 		Pattern patternTableNameExclude = null;
@@ -92,7 +91,7 @@ public class MetaDataManagerTest {
 	@Test
 	public void testIsExcludedTable_excluded_and_included() {
 		// Given
-		MetaDataManager m = new MetaDataManager(null);
+		MetaDataManager m = new MetaDataManager();
 		
 		String tableName = "abcde";
 		Pattern patternTableNameExclude = Pattern.compile("a.*");
@@ -108,7 +107,7 @@ public class MetaDataManagerTest {
 	@Test
 	public void testIsExcludedTable_excluded_and_not_included() {
 		// Given
-		MetaDataManager m = new MetaDataManager(null);
+		MetaDataManager m = new MetaDataManager();
 		
 		String tableName = "abcde";
 		Pattern patternTableNameExclude = Pattern.compile("a.*");
@@ -124,7 +123,7 @@ public class MetaDataManagerTest {
 	@Test
 	public void testIsExcludedTable_not_excluded_and_included() {
 		// Given
-		MetaDataManager m = new MetaDataManager(null);
+		MetaDataManager m = new MetaDataManager();
 		
 		String tableName = "abcde";
 		Pattern patternTableNameExclude = Pattern.compile("test");
@@ -140,7 +139,7 @@ public class MetaDataManagerTest {
 	@Test
 	public void testIsExcludedTable_not_excluded_and_not_included() {
 		// Given
-		MetaDataManager m = new MetaDataManager(null);
+		MetaDataManager m = new MetaDataManager();
 		
 		String tableName = "abcde";
 		Pattern patternTableNameExclude = Pattern.compile("test");

@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.dbcfg.DatabaseConfiguration;
 import org.telosys.tools.commons.jdbc.ConnectionManager;
-import org.telosys.tools.commons.logger.ConsoleLogger;
 
 public class TestMetadataWithDerby {
 	
@@ -32,7 +31,7 @@ public class TestMetadataWithDerby {
 	public static ConnectionManager createConnectionManager() throws TelosysToolsException {
 		System.out.println("Creating ConnectionManager ...");
 		String libraries [] = { "/aaa/aaa", "/bbb/bbb" };
-		return new ConnectionManager( libraries, new ConsoleLogger() );
+		return new ConnectionManager( libraries );
 	}
 	
 	public static void printDatabaseInfo() throws TelosysToolsException, SQLException {
@@ -48,7 +47,7 @@ public class TestMetadataWithDerby {
 	
 	public static Connection getDerbyConnection() throws TelosysToolsException, SQLException {
 
-		ConnectionManager cm = new ConnectionManager( new ConsoleLogger() );
+		ConnectionManager cm = new ConnectionManager();
 
 //		DatabaseConfiguration dbcfg = new DatabaseConfiguration();
 //		dbcfg.setDatabaseId(0);

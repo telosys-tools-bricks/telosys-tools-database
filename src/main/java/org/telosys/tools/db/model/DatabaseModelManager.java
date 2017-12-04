@@ -20,27 +20,29 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.telosys.tools.commons.TelosysToolsLogger;
 import org.telosys.tools.db.metadata.ColumnMetaData;
 import org.telosys.tools.db.metadata.ForeignKeyColumnMetaData;
 import org.telosys.tools.db.metadata.MetaDataManager;
 import org.telosys.tools.db.metadata.PrimaryKeyColumnMetaData;
 import org.telosys.tools.db.metadata.TableMetaData;
 
-public class DatabaseModelManager //extends StandardTool
+public class DatabaseModelManager
 {
-	private final TelosysToolsLogger logger ;
+//	private final TelosysToolsLogger logger ;
 //	private void log(String s) {
 //		if (logger != null ) {
 //			logger.log(s);
 //		}
 //	}
 
-	public DatabaseModelManager(TelosysToolsLogger logger) {
-		//super(logger);
-		this.logger = logger ;
+//	public DatabaseModelManager(TelosysToolsLogger logger) {
+//		//super(logger);
+//		this.logger = logger ;
+//	}
+	public DatabaseModelManager() {
+		super();
 	}
-
+	
 	public DatabaseTables getDatabaseTables(Connection con, String catalog, String schema, 
 			String tableNamePattern, String[] tableTypes,
 			String tableNameInclude, String tableNameExclude ) throws SQLException
@@ -48,7 +50,7 @@ public class DatabaseModelManager //extends StandardTool
 		DatabaseTables databaseTables = new DatabaseTables();
 		
 //		MetaDataManager mgr = new MetaDataManager( this.getLogger() );
-		MetaDataManager mgr = new MetaDataManager( this.logger );
+		MetaDataManager mgr = new MetaDataManager();
 		
 		//--- Get the database Meta-Data
 		DatabaseMetaData dbmd = con.getMetaData();		

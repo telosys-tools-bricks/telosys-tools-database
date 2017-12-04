@@ -24,33 +24,50 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import org.telosys.tools.commons.TelosysToolsLogger;
-
+/**
+ * This class allows to retrieve MetaData information
+ * 
+ * @author Laurent GUERIN
+ *
+ */
 public class MetaDataManager
 {
-	private final TelosysToolsLogger logger ;
-	private void log(String s) {
-		if (logger != null ) {
-			logger.log(s);
-		}
+	private static final Logger LOGGER = Logger.getLogger(MetaDataManager.class.getName());
+	static { 
+		LOGGER.setLevel(Level.OFF);
+	}
+	private void log(String msg) {
+		LOGGER.info(msg);
 	}
 	
-	public MetaDataManager(TelosysToolsLogger logger) {
-		this.logger = logger ;
-	}
-	
+    /**
+     * @param con
+     * @return
+     * @throws SQLException
+     */
     public DbInfo getDatabaseInfo(Connection con)  throws SQLException {
         return getDatabaseInfo(con.getMetaData());
     }
     
+    /**
+     * @param dbmd
+     * @return
+     * @throws SQLException
+     */
     public DbInfo getDatabaseInfo(DatabaseMetaData dbmd)  throws SQLException {
         return new DbInfo(dbmd);
     }
 
-	//--------------------------------------------------------------------------------------------
-	public List<String> getCatalogs(Connection con ) throws SQLException
+	/**
+	 * @param con
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<String> getCatalogs(Connection con) throws SQLException
 	{
 		log("getCatalogs(Connection) ..."  );
 		//--- Get the database Meta-Data
@@ -59,13 +76,17 @@ public class MetaDataManager
 		return getCatalogs( dbmd );
 	}
 
-	//--------------------------------------------------------------------------------------------
+	/**
+	 * @param dbmd
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<String> getCatalogs(DatabaseMetaData dbmd) throws SQLException
 	{
 		log("getCatalogs(DatabaseMetaData) ..."  );
 	    ResultSet rs = dbmd.getCatalogs();
 	    
-		LinkedList<String> list = new LinkedList<String>();
+		LinkedList<String> list = new LinkedList<>();
 		
 		int iCount = 0;
 		while ( rs.next() ) 
@@ -82,8 +103,12 @@ public class MetaDataManager
 		return list ;
 	}
 
-	//--------------------------------------------------------------------------------------------
-	public List<SchemaMetaData> getSchemas(Connection con ) throws SQLException
+	/**
+	 * @param con
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<SchemaMetaData> getSchemas(Connection con) throws SQLException
 	{
 		log("getSchemas(Connection) ..."  );
 		//--- Get the database Meta-Data
@@ -92,13 +117,17 @@ public class MetaDataManager
 		return getSchemas( dbmd );
 	}
 
-	//--------------------------------------------------------------------------------------------
+	/**
+	 * @param dbmd
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<SchemaMetaData> getSchemas(DatabaseMetaData dbmd) throws SQLException
 	{
 		log("getSchemas(DatabaseMetaData) ..."  );
 	    ResultSet rs = dbmd.getSchemas();
 	    
-		LinkedList<SchemaMetaData> list = new LinkedList<SchemaMetaData>();
+		LinkedList<SchemaMetaData> list = new LinkedList<>();
 		
 		ResultSetMetaData rsmd = rs.getMetaData();
 		int columnCount = rsmd.getColumnCount();
@@ -186,14 +215,14 @@ public class MetaDataManager
 		
 	    /*
 	     * JDBC JavaDoc for "getTables":
-	     * catalog : a catalog name; 
-	     *     must match the catalog name as it is stored in the database; 
-	     *     "" retrieves those without a catalog; 
+	     * 'catalog' : a catalog name
+	     *     must match the catalog name as it is stored in the database
+	     *     "" retrieves those without a catalog
 	     *     null means that the catalog name should not be used to narrow the search
 	     *     
-	     * schemaPattern : a schema name pattern; 
-	     *     must match the schema name as it is stored in the database; 
-	     *     "" retrieves those without a schema; 
+	     * 'schemaPattern' : a schema name pattern
+	     *     must match the schema name as it is stored in the database
+	     *     "" retrieves those without a schema
 	     *     null means that the schema name should not be used to narrow the search 
 	     */
 		
@@ -217,7 +246,7 @@ public class MetaDataManager
 			patternTableNameExclude = Pattern.compile(tableNameExclude);
 		}
 
-		LinkedList<TableMetaData> tables = new LinkedList<TableMetaData>();
+		LinkedList<TableMetaData> tables = new LinkedList<>();
 		
 		//--- For each table ...
 		int iTablesCount = 0;
@@ -367,7 +396,7 @@ public class MetaDataManager
 	{
 		log("getPKColumns(..., " + catalog + ", " + schema + ", " + tableName + ")");
 
-		LinkedList<PrimaryKeyColumnMetaData> list = new LinkedList<PrimaryKeyColumnMetaData>();
+		LinkedList<PrimaryKeyColumnMetaData> list = new LinkedList<>();
 	
 		ResultSet rs = dbmd.getPrimaryKeys(catalog, schema, tableName);
 		while ( rs.next() ) 
@@ -394,7 +423,7 @@ public class MetaDataManager
 	{
 		log("getFKColumns(..., " + catalog + ", " + schema + ", " + tableName + ")");
 
-		LinkedList<ForeignKeyColumnMetaData> list = new LinkedList<ForeignKeyColumnMetaData>();
+		LinkedList<ForeignKeyColumnMetaData> list = new LinkedList<>();
 	
 		ResultSet rs = dbmd.getImportedKeys(catalog, schema, tableName);
 		while ( rs.next() ) 
@@ -422,19 +451,9 @@ public class MetaDataManager
 	{
 		log("getAutoIncrementedColumns(..., " + schemaName + ", " + tableName + ")");
 
-		LinkedList<String> result = new LinkedList<String>();
+		LinkedList<String> result = new LinkedList<>();
 		
 		Statement stmt = conn.createStatement();
-		
-//		String fullName = tableName.trim() ;
-//		if ( schemaName != null ) {
-//			fullName = schemaName.trim() + "." + tableName.trim() ;
-//		}
-//		
-//		//ResultSet rs = stmt.executeQuery("SELECT * FROM " + fullName + " WHERE 1 = 0");
-//		String sqlRequest = "SELECT * FROM " + fullName + " WHERE 1 = 0" ;
-//		log("execute SQL : '" + sqlRequest + "'");
-//		ResultSet rs = stmt.executeQuery(sqlRequest);
 		
 		ResultSet rs = executeSqlSelect(stmt, schemaName, tableName);
 		if ( rs != null ) {
