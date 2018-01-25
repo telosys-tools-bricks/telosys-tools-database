@@ -21,31 +21,27 @@ import java.util.List;
 
 public class DatabaseTables implements Iterable<DatabaseTable>
 {
-	private LinkedList<DatabaseTable> tables = new LinkedList<DatabaseTable>();
+	private LinkedList<DatabaseTable> tables = new LinkedList<>();
 	
 	
-	protected void addTable(DatabaseTable databaseTable )
-	{
+	protected void addTable(DatabaseTable databaseTable ) {
 		tables.addLast(databaseTable);
 	}
 	
-	public List<DatabaseTable> getTables()
-	{
+	public List<DatabaseTable> getTables() {
 		return tables ;
 	}
 	
-	public Iterator<DatabaseTable> iterator()
-	{
+	public int size() {
+		return tables.size() ;
+	}
+	
+	public Iterator<DatabaseTable> iterator() {
 		return tables.iterator();
 	}
 	
-	public DatabaseTable getTableByName(String tableName)
-	{
+	public DatabaseTable getTableByName(String tableName) {
 		if ( null == tableName ) throw new IllegalArgumentException("Table name is null");
-//		Iterator iter = tables.iterator();
-//		while ( iter.hasNext() )
-//		{
-//			DatabaseTable databaseTable = (DatabaseTable) iter.next();
 		for ( DatabaseTable databaseTable : tables ) {
 			if ( tableName.equals( databaseTable.getTableName() ) )
 			{

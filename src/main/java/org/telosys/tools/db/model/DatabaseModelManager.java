@@ -20,52 +20,87 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.telosys.tools.commons.observer.TaskObserver2;
 import org.telosys.tools.db.metadata.ColumnMetaData;
 import org.telosys.tools.db.metadata.ForeignKeyColumnMetaData;
 import org.telosys.tools.db.metadata.MetaDataManager;
 import org.telosys.tools.db.metadata.PrimaryKeyColumnMetaData;
 import org.telosys.tools.db.metadata.TableMetaData;
+import org.telosys.tools.db.observer.DatabaseObserverProvider;
 
-public class DatabaseModelManager
-{
+public class DatabaseModelManager {
+	
+	private final TaskObserver2<Integer,String> observer ;
+
+	/**
+	 * Constructor 
+	 */
 	public DatabaseModelManager() {
 		super();
+		this.observer = DatabaseObserverProvider.getNewObserverInstance() ;
 	}
 	
+	/**
+	 * Constructor with observer
+	 * @param observer
+	 */
+	public DatabaseModelManager(TaskObserver2<Integer,String> observer) {
+		super();
+		this.observer = observer;
+	}
+	
+    private void notify(int level, String message) {
+    	if ( observer != null ) {
+        	observer.notify(level, message);
+    	}
+    }
+
 	public DatabaseTables getDatabaseTables(Connection con, String catalog, String schema, 
 			String tableNamePattern, String[] tableTypes,
 			String tableNameInclude, String tableNameExclude ) throws SQLException
 	{
 		DatabaseTables databaseTables = new DatabaseTables();
 		
-//		MetaDataManager mgr = new MetaDataManager( this.getLogger() );
-		MetaDataManager mgr = new MetaDataManager();
+		MetaDataManager mgr = new MetaDataManager(observer);
 		
 		//--- Get the database Meta-Data
+		notify(1, "Get database metadata");
 		DatabaseMetaData dbmd = con.getMetaData();		
 
 		//--- Initialize the tables ( table, columns, PK, FK ) 
+		notify(1, "Get tables metadata");
 		List<TableMetaData> tablesMetaData = mgr.getTables(dbmd, catalog, schema, tableNamePattern, tableTypes, tableNameInclude, tableNameExclude);	
 		
 		//--- For each table get columns, primary key and foreign keys
+		int i = 0 ;
+		int count = tablesMetaData.size() ;
 		for ( TableMetaData tableMetaData : tablesMetaData ) {
+			i++ ;
+			String tableName = tableMetaData.getTableName();
+			notify(1, "Processing table '" + tableName + "' (" + i + " / " + count + ")" );
+			
 			//--- Table columns
-			List<ColumnMetaData> columnsMetaData = mgr.getColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableMetaData.getTableName() );
+			notify(2, "'" + tableName + "' : get columns metadata" );
+			List<ColumnMetaData> columnsMetaData = mgr.getColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableName );
 
 			//--- Table primary key columns
-			List<PrimaryKeyColumnMetaData> pkColumnsMetaData = mgr.getPKColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableMetaData.getTableName() );
+			notify(2, "'" + tableName + "' : get PK metadata");
+			List<PrimaryKeyColumnMetaData> pkColumnsMetaData = mgr.getPKColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableName );
 
 			//--- Table foreign keys columns
-			List<ForeignKeyColumnMetaData> fkColumnsMetaData = mgr.getFKColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableMetaData.getTableName() );
+			notify(2, "'" + tableName + "' : get FK metadata for table");
+			List<ForeignKeyColumnMetaData> fkColumnsMetaData = mgr.getFKColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableName );
 
 			//--- Build the table model
-			DatabaseTable databaseTable = new DatabaseTable(tableMetaData,columnsMetaData,pkColumnsMetaData,fkColumnsMetaData);
+			DatabaseTable databaseTable = new DatabaseTable(tableMetaData, columnsMetaData, pkColumnsMetaData, fkColumnsMetaData);
 			
 			//--- Set auto-incremented columns if any
+			notify(2, "'" + tableName + "' : find auto-incremented columns");
 			findAutoIncrementedColums(mgr, con, databaseTable);
 			
 			databaseTables.addTable(databaseTable);
 		}
+		notify(1, "Get tables metadata");
 		
 		//--- Initialize the stored procedures
 		// in the future ...
@@ -77,12 +112,6 @@ public class DatabaseModelManager
 	{
 		List<String> autoIncrColumns = null ;
 		
-//		try {
-//			autoIncrColumns = mgr.getAutoIncrementedColumns(con, databaseTable.getSchemaName(), databaseTable.getTableName() );
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			// ERROR : cannot get autoincremented columns
-//		}
 		autoIncrColumns = mgr.getAutoIncrementedColumns(con, databaseTable.getSchemaName(), databaseTable.getTableName() );
 		
 		if ( autoIncrColumns != null ) {

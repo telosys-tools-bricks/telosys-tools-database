@@ -28,13 +28,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import org.telosys.tools.commons.observer.TaskObserver2;
+import org.telosys.tools.db.observer.DatabaseObserverProvider;
+
 /**
  * This class allows to retrieve MetaData information
  * 
  * @author Laurent GUERIN
  *
  */
-public class MetaDataManager
+public class MetaDataManager 
 {
 	private static final Logger LOGGER = Logger.getLogger(MetaDataManager.class.getName());
 	static { 
@@ -44,12 +47,38 @@ public class MetaDataManager
 		LOGGER.info(msg);
 	}
 	
+	private final TaskObserver2<Integer,String> observer ;
+	
     /**
+     * Constructor with observer
+     * @param observer
+     */
+    public MetaDataManager(TaskObserver2<Integer,String> observer) {
+		super();
+		this.observer = observer;
+	}
+
+    /**
+     * Constructor without observer
+     */
+    public MetaDataManager() {
+		super();
+		this.observer = DatabaseObserverProvider.getNewObserverInstance() ;
+	}
+
+    // not used for the moment
+    private void notify(String message) {
+    	if ( observer != null ) {
+        	observer.notify(4, message);
+    	}
+    }
+    
+	/**
      * @param con
      * @return
      * @throws SQLException
      */
-    public DbInfo getDatabaseInfo(Connection con)  throws SQLException {
+    public DbInfo getDatabaseInfo(Connection con) throws SQLException {
         return getDatabaseInfo(con.getMetaData());
     }
     
@@ -89,8 +118,7 @@ public class MetaDataManager
 		LinkedList<String> list = new LinkedList<>();
 		
 		int iCount = 0;
-		while ( rs.next() ) 
-		{
+		while ( rs.next() ) {
 			iCount++;
 			log("getCatalogs : try to build catalog #" + iCount +" ..." );			
 			String catalog = MetaDataBuilder.buildCatalogMetaData(rs);
@@ -273,6 +301,10 @@ public class MetaDataManager
 			
 			if( ! isExclude ) {
 				tables.addLast(tableMetaData);
+				notify("Table " + tableMetaData.getTableName() + " added");
+			}
+			else {
+				notify("Table " + tableMetaData.getTableName() + " exclude");
 			}
 		}
 		rs.close();
@@ -345,21 +377,10 @@ public class MetaDataManager
 		ResultSet rs = dbmd.getColumns(catalog, schema, tableName, "%");
 
 		// --- For each column of the table ...
-		while ( rs.next() ) 
-		{
-			ColumnMetaData columnMetaData =  MetaDataBuilder.buildColumnMetaData(rs);
-			
-
-//			// --- If this column is in the Table Primary Key
-//			if (listPK.contains(dbColName.toUpperCase())) {
-//				//column.setAttribute(DatabaseRepository.COLUMN_PRIMARY_KEY_ATTRIBUTE, "true");
-//				column.setPrimaryKey(true);
-//			}
-//
-//			// --- If this column is a member of a Foreign Key
-//			setFkAttribute(dbColName, column, listFK);
-			
+		while ( rs.next() ) {
+			ColumnMetaData columnMetaData =  MetaDataBuilder.buildColumnMetaData(rs);			
 			list.addLast(columnMetaData);
+			notify("Column " + columnMetaData.getColumnName() );
 		}
 
 		rs.close();
@@ -403,6 +424,7 @@ public class MetaDataManager
 		{
 			PrimaryKeyColumnMetaData pkColumnMetaData =  MetaDataBuilder.buildPKColumnMetaData(rs);
 			list.addLast(pkColumnMetaData);
+			notify("PK column " + pkColumnMetaData.getColumnName() );
 		}
 		rs.close();
 		
@@ -430,6 +452,7 @@ public class MetaDataManager
 		{
 			ForeignKeyColumnMetaData fkColumnMetaData =  MetaDataBuilder.buildFKColumnMetaData(rs);
 			list.addLast(fkColumnMetaData);
+			notify("FK column " + fkColumnMetaData.getFkColumnName() );
 		}
 		rs.close();
 		
@@ -460,8 +483,8 @@ public class MetaDataManager
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int n = rsmd.getColumnCount();
 			
-			// for each column 
-			for ( int i = 1 ; i < n ; i++) {
+			// for each column ( from 1 to N )
+			for ( int i = 1 ; i <= n ; i++) {
 				if ( rsmd.isAutoIncrement(i) ) { // if auto-incremented column
 					String colName = rsmd.getColumnName(i);
 					result.addLast(colName);
@@ -502,6 +525,9 @@ public class MetaDataManager
 	 * @param tableName
 	 * @param step
 	 * @return
+	 */
+	/*
+	 * . ORACLE ok with : "myschema"."mytable" and myschema.mytable  
 	 */
 	private String buildSqlRequest(String schemaName, String tableName, int step) {
 		String fullTableName = null ;
