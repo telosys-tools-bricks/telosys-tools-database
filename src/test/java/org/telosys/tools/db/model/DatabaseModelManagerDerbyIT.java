@@ -13,7 +13,8 @@ public class DatabaseModelManagerDerbyIT {
 	@Test
 	public void test1() throws SQLException, TelosysToolsException {
 		
-		DatabaseObserverProvider.setObserverClass(MyObserver.class);
+		DatabaseObserverProvider.setMetadataObserverClass(MyMetadataObserver.class);
+		DatabaseObserverProvider.setModelObserverClass(MyModelObserver.class);
 		
 		DatabaseModelManager dbmgr = new DatabaseModelManager();
 		
@@ -30,7 +31,6 @@ public class DatabaseModelManagerDerbyIT {
 		for ( DatabaseTable t : dbTables ) {
 			System.out.println(" . " + t.getTableName() );
 		}
-		// Then
-		//assertFalse(isExcluded);
 	}
+
 }

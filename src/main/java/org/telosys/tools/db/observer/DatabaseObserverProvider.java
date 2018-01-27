@@ -19,27 +19,55 @@ import org.telosys.tools.commons.observer.TaskObserver2;
 
 public class DatabaseObserverProvider{
 
-	private static Class<? extends TaskObserver2<Integer,String>> observerClass = null ;
+	private static Class<? extends TaskObserver2<Integer,String>> metadataObserverClass = null ;
+
+	private static Class<? extends TaskObserver2<Integer,String>> modelObserverClass = null ;
 	
 	/**
 	 * Private constructor
 	 */
 	private DatabaseObserverProvider() {
 	}
-	
-	public static void setObserverClass(Class<? extends TaskObserver2<Integer,String>> clazz ) {
-		observerClass = clazz ;
+
+	//---------------------------------------------------------------------------------------------
+	// MODEL OBSERVER
+	//---------------------------------------------------------------------------------------------
+	public static void setModelObserverClass(Class<? extends TaskObserver2<Integer,String>> clazz ) {
+		modelObserverClass = clazz ;
 	}
 	
-	public static Class<? extends TaskObserver2<Integer,String>> getObserverClass() {
-		return observerClass ;
+	public static Class<? extends TaskObserver2<Integer,String>> getModelObserverClass() {
+		return modelObserverClass ;
 	}
 	
-	public static TaskObserver2<Integer,String> getNewObserverInstance() {
+	public static TaskObserver2<Integer,String> getNewModelObserverInstance() {
 		TaskObserver2<Integer,String> instance = null ;
-		if ( observerClass != null ) {
+		if ( modelObserverClass != null ) {
 			try {
-				instance = observerClass.newInstance() ;
+				instance = modelObserverClass.newInstance() ;
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw new IllegalStateException("Cannot create TaskObserver instance", e);
+			}
+		}
+		return instance ;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	// METADATA OBSERVER
+	//---------------------------------------------------------------------------------------------
+	public static void setMetadataObserverClass(Class<? extends TaskObserver2<Integer,String>> clazz ) {
+		metadataObserverClass = clazz ;
+	}
+	
+	public static Class<? extends TaskObserver2<Integer,String>> getMetadataObserverClass() {
+		return metadataObserverClass ;
+	}
+	
+	public static TaskObserver2<Integer,String> getNewMetadataObserverInstance() {
+		TaskObserver2<Integer,String> instance = null ;
+		if ( metadataObserverClass != null ) {
+			try {
+				instance = metadataObserverClass.newInstance() ;
 			} catch (InstantiationException | IllegalAccessException e) {
 				throw new IllegalStateException("Cannot create TaskObserver instance", e);
 			}

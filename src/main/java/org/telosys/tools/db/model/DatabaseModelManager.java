@@ -37,7 +37,7 @@ public class DatabaseModelManager {
 	 */
 	public DatabaseModelManager() {
 		super();
-		this.observer = DatabaseObserverProvider.getNewObserverInstance() ;
+		this.observer = DatabaseObserverProvider.getNewModelObserverInstance() ;
 	}
 	
 	/**
@@ -49,6 +49,11 @@ public class DatabaseModelManager {
 		this.observer = observer;
 	}
 	
+    /**
+     * Notify the observer if any
+     * @param level
+     * @param message
+     */
     private void notify(int level, String message) {
     	if ( observer != null ) {
         	observer.notify(level, message);
@@ -61,7 +66,7 @@ public class DatabaseModelManager {
 	{
 		DatabaseTables databaseTables = new DatabaseTables();
 		
-		MetaDataManager mgr = new MetaDataManager(observer);
+		MetaDataManager mgr = new MetaDataManager();
 		
 		//--- Get the database Meta-Data
 		notify(1, "Get database metadata");

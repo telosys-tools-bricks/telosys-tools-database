@@ -47,29 +47,33 @@ public class MetaDataManager
 		LOGGER.info(msg);
 	}
 	
+	private static final int OBSERVER_LEVEL = 4 ;
 	private final TaskObserver2<Integer,String> observer ;
 	
-    /**
-     * Constructor with observer
-     * @param observer
-     */
-    public MetaDataManager(TaskObserver2<Integer,String> observer) {
-		super();
-		this.observer = observer;
-	}
+//    /**
+//     * Constructor with observer
+//     * @param observer
+//     */
+//    public MetaDataManager(TaskObserver2<Integer,String> observer) {
+//		super();
+//		this.observer = observer;
+//	}
 
     /**
      * Constructor without observer
      */
     public MetaDataManager() {
 		super();
-		this.observer = DatabaseObserverProvider.getNewObserverInstance() ;
+		this.observer = DatabaseObserverProvider.getNewMetadataObserverInstance() ;
 	}
 
-    // not used for the moment
+    /**
+     * Notify the observer if any
+     * @param message
+     */
     private void notify(String message) {
     	if ( observer != null ) {
-        	observer.notify(4, message);
+        	observer.notify(OBSERVER_LEVEL, message);
     	}
     }
     
