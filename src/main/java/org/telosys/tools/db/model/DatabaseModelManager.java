@@ -69,43 +69,44 @@ public class DatabaseModelManager {
 		MetaDataManager mgr = new MetaDataManager();
 		
 		//--- Get the database Meta-Data
-		notify(1, "Get database metadata");
+		notify(1, "Getting database metadata");
 		DatabaseMetaData dbmd = con.getMetaData();		
 
 		//--- Initialize the tables ( table, columns, PK, FK ) 
-		notify(1, "Get tables metadata");
+		notify(1, "Getting tables metadata");
 		List<TableMetaData> tablesMetaData = mgr.getTables(dbmd, catalog, schema, tableNamePattern, tableTypes, tableNameInclude, tableNameExclude);	
+		int count = tablesMetaData.size() ;
+		notify(1, count + " table(s) found");
 		
 		//--- For each table get columns, primary key and foreign keys
 		int i = 0 ;
-		int count = tablesMetaData.size() ;
 		for ( TableMetaData tableMetaData : tablesMetaData ) {
 			i++ ;
 			String tableName = tableMetaData.getTableName();
 			notify(1, "Processing table '" + tableName + "' (" + i + " / " + count + ")" );
 			
 			//--- Table columns
-			notify(2, "'" + tableName + "' : get columns metadata" );
+			notify(2, "'" + tableName + "' : getting columns metadata" );
 			List<ColumnMetaData> columnsMetaData = mgr.getColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableName );
 
 			//--- Table primary key columns
-			notify(2, "'" + tableName + "' : get PK metadata");
+			notify(2, "'" + tableName + "' : getting PK metadata");
 			List<PrimaryKeyColumnMetaData> pkColumnsMetaData = mgr.getPKColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableName );
 
 			//--- Table foreign keys columns
-			notify(2, "'" + tableName + "' : get FK metadata for table");
+			notify(2, "'" + tableName + "' : getting FK metadata for table");
 			List<ForeignKeyColumnMetaData> fkColumnsMetaData = mgr.getFKColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableName );
 
 			//--- Build the table model
 			DatabaseTable databaseTable = new DatabaseTable(tableMetaData, columnsMetaData, pkColumnsMetaData, fkColumnsMetaData);
 			
 			//--- Set auto-incremented columns if any
-			notify(2, "'" + tableName + "' : find auto-incremented columns");
+			notify(2, "'" + tableName + "' : finding auto-incremented columns");
 			findAutoIncrementedColums(mgr, con, databaseTable);
 			
 			databaseTables.addTable(databaseTable);
 		}
-		notify(1, "Get tables metadata");
+		notify(1, "End of metadata processing : " + count + " table(s) processed.");
 		
 		//--- Initialize the stored procedures
 		// in the future ...
