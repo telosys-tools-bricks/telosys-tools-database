@@ -33,9 +33,9 @@ public class ColumnMetaData
 	
 	private int     size = 0 ;
 	
-	private int     decimalDigits = 0 ;
+	private int     decimalDigits = 0 ; // the number of fractional digits  
 	
-	private int     numPrecRadix = 0 ;
+	private int     numPrecRadix = 0 ; // base ( 2 or 10 )
 		
 	private String  defaultValue ;  
 	

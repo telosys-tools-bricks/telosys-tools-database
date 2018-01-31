@@ -21,11 +21,10 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.telosys.tools.commons.observer.TaskObserver2;
@@ -37,30 +36,12 @@ import org.telosys.tools.db.observer.DatabaseObserverProvider;
  * @author Laurent GUERIN
  *
  */
-public class MetaDataManager 
-{
-	private static final Logger LOGGER = Logger.getLogger(MetaDataManager.class.getName());
-	static { 
-		LOGGER.setLevel(Level.OFF);
-	}
-	private void log(String msg) {
-		LOGGER.info(msg);
-	}
+public class MetaDataManager {
 	
-	private static final int OBSERVER_LEVEL = 4 ;
 	private final TaskObserver2<Integer,String> observer ;
 	
-//    /**
-//     * Constructor with observer
-//     * @param observer
-//     */
-//    public MetaDataManager(TaskObserver2<Integer,String> observer) {
-//		super();
-//		this.observer = observer;
-//	}
-
     /**
-     * Constructor without observer
+     * Constructor
      */
     public MetaDataManager() {
 		super();
@@ -69,65 +50,65 @@ public class MetaDataManager
 
     /**
      * Notify the observer if any
+     * @param level
      * @param message
      */
-    private void notify(String message) {
+    private void notify(int level, String message) {
     	if ( observer != null ) {
-        	observer.notify(OBSERVER_LEVEL, message);
+        	observer.notify(level, message);
     	}
     }
     
 	/**
+     * Get database information
      * @param con
      * @return
      * @throws SQLException
      */
     public DbInfo getDatabaseInfo(Connection con) throws SQLException {
-        return getDatabaseInfo(con.getMetaData());
+    	notify(1, "Getting database information from connection");
+        return getDatabaseInfo( con.getMetaData() );
     }
     
     /**
+     * Get database information
      * @param dbmd
      * @return
      * @throws SQLException
      */
     public DbInfo getDatabaseInfo(DatabaseMetaData dbmd)  throws SQLException {
+    	notify(1, "Getting database information from metadata");
         return new DbInfo(dbmd);
     }
 
 	/**
+	 * Get the catalogs
 	 * @param con
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<String> getCatalogs(Connection con) throws SQLException
-	{
-		log("getCatalogs(Connection) ..."  );
-		//--- Get the database Meta-Data
-		DatabaseMetaData dbmd = con.getMetaData();		
-		
-		return getCatalogs( dbmd );
+	public List<String> getCatalogs(Connection con) throws SQLException {
+    	notify(1, "Getting catalogs from connection");
+		return getCatalogs( con.getMetaData() );
 	}
 
 	/**
+	 * Get the catalogs
 	 * @param dbmd
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<String> getCatalogs(DatabaseMetaData dbmd) throws SQLException
-	{
-		log("getCatalogs(DatabaseMetaData) ..."  );
+	public List<String> getCatalogs(DatabaseMetaData dbmd) throws SQLException {
+    	notify(1, "Getting catalogs from metadata");
 	    ResultSet rs = dbmd.getCatalogs();
 	    
 		LinkedList<String> list = new LinkedList<>();
 		
-		int iCount = 0;
+		int count = 0;
 		while ( rs.next() ) {
-			iCount++;
-			log("getCatalogs : try to build catalog #" + iCount +" ..." );			
+			count++;
 			String catalog = MetaDataBuilder.buildCatalogMetaData(rs);
-			log("getCatalogs : catalog #" + iCount +  " built ( name = " + catalog + " )");
-
+	    	notify(2, "Registering catalog #" + count + " : " + catalog );
 			list.addLast(catalog);
 		}
 		rs.close();
@@ -140,13 +121,9 @@ public class MetaDataManager
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<SchemaMetaData> getSchemas(Connection con) throws SQLException
-	{
-		log("getSchemas(Connection) ..."  );
-		//--- Get the database Meta-Data
-		DatabaseMetaData dbmd = con.getMetaData();		
-		
-		return getSchemas( dbmd );
+	public List<SchemaMetaData> getSchemas(Connection con) throws SQLException {
+    	notify(1, "Getting schemas from connection");
+		return getSchemas( con.getMetaData() );
 	}
 
 	/**
@@ -154,26 +131,21 @@ public class MetaDataManager
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<SchemaMetaData> getSchemas(DatabaseMetaData dbmd) throws SQLException
-	{
-		log("getSchemas(DatabaseMetaData) ..."  );
+	public List<SchemaMetaData> getSchemas(DatabaseMetaData dbmd) throws SQLException {
+    	notify(1, "Getting schemas from metadata");
 	    ResultSet rs = dbmd.getSchemas();
 	    
 		LinkedList<SchemaMetaData> list = new LinkedList<>();
 		
 		ResultSetMetaData rsmd = rs.getMetaData();
 		int columnCount = rsmd.getColumnCount();
-		log("getSchemas : column count = " + columnCount );
 		
 		//--- For each SCHEMA ...
-		int iCount = 0;
-		while ( rs.next() ) 
-		{
-			iCount++;
-			log("getSchemas : try to build schema #" + iCount +" ..." );			
+		int count = 0;
+		while ( rs.next() ) {
+			count++;
 			SchemaMetaData schemaMetaData = MetaDataBuilder.buildSchemaMetaData(rs, columnCount);
-			log("getSchemas : schema #" + iCount +  " built ( name = " + schemaMetaData.getSchemaName() + " )");
-
+	    	notify(2, "Registering schema #" + count + " : " + schemaMetaData.getSchemaName() );
 			list.addLast(schemaMetaData);
 		}
 		rs.close();
@@ -198,6 +170,7 @@ public class MetaDataManager
 			String tableNamePattern, String[] tableTypes,
 			String tableNameInclude, String tableNameExclude ) throws SQLException
 	{
+    	notify(1, "Getting tables from connection");
 		//--- Get the database Meta-Data
 		DatabaseMetaData dbmd = con.getMetaData();		
 		
@@ -243,7 +216,13 @@ public class MetaDataManager
 			String tableNamePattern, String[] tableTypes,
 			String tableNameInclude, String tableNameExclude ) throws SQLException
 	{
-		log("getTables(..., '" + catalog + "', '" + schema + "', '" + tableNamePattern + "' )");
+    	notify(1, "Getting tables from metadata");
+    	notify(2, ". catalog = '" + catalog + "'");
+    	notify(2, ". schema  = '" + schema  + "'");
+    	notify(2, ". metadata pattern = '" + tableNamePattern + "'" );
+    	notify(2, ". metadata types   = " + Arrays.toString(tableTypes) );
+    	notify(2, ". include pattern  = '" + tableNameInclude + "'" );
+    	notify(2, ". exclude pattern  = '" + tableNameExclude + "'" );
 		
 	    /*
 	     * JDBC JavaDoc for "getTables":
@@ -264,51 +243,36 @@ public class MetaDataManager
 		//--- Get tables list
 		ResultSet rs = dbmd.getTables(catalogToUse, schemaToUse, tableNamePattern, tableTypes);
 
-		log("getTables : result set ready" );
-		
 		//--- Regexp of table names to include
 		Pattern patternTableNameInclude = null;
-		if(tableNameInclude != null && ! "".equals(tableNameInclude.trim())) {
+		if (tableNameInclude != null && ! "".equals(tableNameInclude.trim())) {
 			patternTableNameInclude = Pattern.compile(tableNameInclude);
 		}
 		
 		//--- Regexp of table names to exclude
 		Pattern patternTableNameExclude = null;
-		if(tableNameExclude != null && ! "".equals(tableNameExclude.trim())) {
+		if (tableNameExclude != null && ! "".equals(tableNameExclude.trim())) {
 			patternTableNameExclude = Pattern.compile(tableNameExclude);
 		}
 
 		LinkedList<TableMetaData> tables = new LinkedList<>();
 		
 		//--- For each table ...
-		int iTablesCount = 0;
-		while ( rs.next() ) 
-		{
-			iTablesCount++;
-			log("getTables : try to build table #" + iTablesCount +"..." );
-			
+		int count = 0;
+		while ( rs.next() ) {
+			count++;
+	    	notify(2, "Processing table #" + count );
 			TableMetaData tableMetaData = MetaDataBuilder.buildTableMetaData(rs);
-			log("getTables : table #" + iTablesCount +  " built ( name = " + tableMetaData.getTableName() + " )");
+			
+			String tableName = tableMetaData.getTableName() ;
 
-			String tableName = tableMetaData.getTableName();
-			
 			boolean isExclude = isExcludedTable(tableName, patternTableNameInclude, patternTableNameExclude);
-						
-//			//--- Primary Key columns for the current table
-//			List pkColumns = getPKColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableMetaData.getTableName() );
-//
-//			//--- Foreign Keys columns for the current table
-//			List fkColumns = getFKColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableMetaData.getTableName() );
-//			
-//			//--- All columns of the current table
-//			List columns = getColumns(dbmd, tableMetaData.getCatalogName(), tableMetaData.getSchemaName(), tableMetaData.getTableName() );
-			
 			if( ! isExclude ) {
 				tables.addLast(tableMetaData);
-				notify("Table " + tableMetaData.getTableName() + " added");
+		    	notify(2, "Table #" + count + " : " + tableName + " registered" );
 			}
 			else {
-				notify("Table " + tableMetaData.getTableName() + " exclude");
+		    	notify(2, "Table #" + count + " : " + tableName + " excluded" );
 			}
 		}
 		rs.close();
@@ -325,22 +289,22 @@ public class MetaDataManager
 	 */
 	protected boolean isExcludedTable(String tableName, Pattern patternTableNameInclude, Pattern patternTableNameExclude) {
 		//--- Test if the table name matches with the regexp of excluded tables names
-		boolean isExclude;
+		boolean isExcluded;
 		if( patternTableNameExclude == null ) {
 			//--- Regexp is not defined : the table is not excluded
-			isExclude = false;
+			isExcluded = false;
 		} else {
-			isExclude = patternTableNameExclude.matcher(tableName).matches();
+			isExcluded = patternTableNameExclude.matcher(tableName).matches();
 		}
 
 		//--- Test if the table name matches with the regexp of included tables names, only in the case where the table name is not excluded
-		if( ! isExclude ) {
+		if( ! isExcluded ) {
 			if( patternTableNameInclude != null ) {
-				boolean isInclude = patternTableNameInclude.matcher(tableName).matches();
-				isExclude = ! isInclude;
+				boolean isIncluded = patternTableNameInclude.matcher(tableName).matches();
+				isExcluded = ! isIncluded;
 			}
 		}
-		return isExclude;
+		return isExcluded;
 	}
 	
 	
@@ -373,9 +337,9 @@ public class MetaDataManager
 	public List<ColumnMetaData> getColumns(DatabaseMetaData dbmd, String catalog, String schema, String tableName) 
 		throws SQLException
 	{
-		log("getColumns(..., " + catalog + ", " + schema + ", " + tableName + ")");
+    	notify(1, "Getting columns from metadata for table '" + tableName + "'");
 		
-		LinkedList<ColumnMetaData> list = new LinkedList<ColumnMetaData>();
+		LinkedList<ColumnMetaData> list = new LinkedList<>();
 
 		//--- Get the columns of the table ...
 		ResultSet rs = dbmd.getColumns(catalog, schema, tableName, "%");
@@ -384,7 +348,7 @@ public class MetaDataManager
 		while ( rs.next() ) {
 			ColumnMetaData columnMetaData =  MetaDataBuilder.buildColumnMetaData(rs);			
 			list.addLast(columnMetaData);
-			notify("Column " + columnMetaData.getColumnName() );
+			notify(2, "Column " + columnMetaData.getColumnName() );
 		}
 
 		rs.close();
@@ -419,16 +383,15 @@ public class MetaDataManager
 	public List<PrimaryKeyColumnMetaData> getPKColumns(DatabaseMetaData dbmd, String catalog, String schema, String tableName) 
 		throws SQLException
 	{
-		log("getPKColumns(..., " + catalog + ", " + schema + ", " + tableName + ")");
+    	notify(1, "Getting PK columns from metadata for table '" + tableName + "'");
 
 		LinkedList<PrimaryKeyColumnMetaData> list = new LinkedList<>();
 	
 		ResultSet rs = dbmd.getPrimaryKeys(catalog, schema, tableName);
-		while ( rs.next() ) 
-		{
+		while ( rs.next() ) {
 			PrimaryKeyColumnMetaData pkColumnMetaData =  MetaDataBuilder.buildPKColumnMetaData(rs);
 			list.addLast(pkColumnMetaData);
-			notify("PK column " + pkColumnMetaData.getColumnName() );
+			notify(2, "PK column " + pkColumnMetaData.getColumnName() );
 		}
 		rs.close();
 		
@@ -447,16 +410,15 @@ public class MetaDataManager
 	public List<ForeignKeyColumnMetaData> getFKColumns(DatabaseMetaData dbmd, String catalog, String schema, String tableName) 
 		throws SQLException
 	{
-		log("getFKColumns(..., " + catalog + ", " + schema + ", " + tableName + ")");
+    	notify(1, "Getting FK columns from metadata for table '" + tableName + "'");
 
 		LinkedList<ForeignKeyColumnMetaData> list = new LinkedList<>();
 	
 		ResultSet rs = dbmd.getImportedKeys(catalog, schema, tableName);
-		while ( rs.next() ) 
-		{
+		while ( rs.next() ) {
 			ForeignKeyColumnMetaData fkColumnMetaData =  MetaDataBuilder.buildFKColumnMetaData(rs);
 			list.addLast(fkColumnMetaData);
-			notify("FK column " + fkColumnMetaData.getFkColumnName() );
+			notify(2, "FK column " + fkColumnMetaData.getFkColumnName() );
 		}
 		rs.close();
 		
@@ -476,7 +438,7 @@ public class MetaDataManager
 	 */
 	public List<String> getAutoIncrementedColumns(Connection conn, String schemaName, String tableName) throws SQLException
 	{
-		log("getAutoIncrementedColumns(..., " + schemaName + ", " + tableName + ")");
+    	notify(1, "Getting auto-incremented columns for table '" + tableName + "'");
 
 		LinkedList<String> result = new LinkedList<>();
 		
@@ -491,6 +453,7 @@ public class MetaDataManager
 			for ( int i = 1 ; i <= n ; i++) {
 				if ( rsmd.isAutoIncrement(i) ) { // if auto-incremented column
 					String colName = rsmd.getColumnName(i);
+			    	notify(2, "Auto-incremented column found : '" + colName + "'");
 					result.addLast(colName);
 				}
 			}
@@ -506,14 +469,14 @@ public class MetaDataManager
 	private ResultSet executeSqlSelect(Statement stmt, String schemaName, String tableName) {
 		for ( int step = 1 ; step <=3 ; step++ ) {
 			String sqlRequest = buildSqlRequest( schemaName, tableName, step);
-			log("Trying to execute SQL : " + sqlRequest );
+			notify(3, "Trying to execute SQL #" + step + ": " + sqlRequest );
 			try {
 				ResultSet rs = stmt.executeQuery(sqlRequest);
-				log("SQL result : OK" );
+				notify(3, "SQL result : OK");
 				return rs ;
 			} catch (Exception e) { // SQLException and more
 				// Cannot execute 
-				log("SQL result : " + e.getMessage() );
+				notify(3, "SQL result : ERROR : " + e.getMessage());
 				// Continue : next step
 			} 
 		}
@@ -548,7 +511,7 @@ public class MetaDataManager
 			throw new RuntimeException("buildSqlRequest() : invalid step value");
 		}
 		String sqlRequest = "SELECT * FROM " + fullTableName + " WHERE 1 = 0" ;
-		log("SQL request (step="+step+") : " + sqlRequest );
+		//log("SQL request (step="+step+") : " + sqlRequest );
 		return sqlRequest;
 	}
 	
