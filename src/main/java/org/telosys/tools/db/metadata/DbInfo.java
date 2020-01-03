@@ -18,8 +18,6 @@ package org.telosys.tools.db.metadata;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-import org.telosys.tools.commons.TelosysToolsException;
-
 public class DbInfo {
 
     private final String url ;
