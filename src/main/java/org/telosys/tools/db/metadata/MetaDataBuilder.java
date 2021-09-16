@@ -19,22 +19,27 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MetaDataBuilder 
-{
+public class MetaDataBuilder {
+
+	/**
+	 * Private constructor
+	 */
+	private MetaDataBuilder() {
+	}
+
 	//--------------------------------------------------------------------------------------------
 	// CATALOG 
 	//--------------------------------------------------------------------------------------------
 	protected static String buildCatalogMetaData( ResultSet rs ) throws SQLException
 	{
-	    String catalogName = rs.getString(TABLE_CAT);
-		return catalogName ;
+	    return rs.getString(TABLE_CAT);
 	}
 
 	//--------------------------------------------------------------------------------------------
 	// SCHEMA 
 	//--------------------------------------------------------------------------------------------
-	/*  1 */ private final static String TABLE_CATALOG  = "TABLE_CATALOG" ; // table catalog (may be null) 
-	/*  2 */ private final static String TABLE_SCHEM    = "TABLE_SCHEM" ;   // table schema  
+	/*  1 */ private static final String TABLE_CATALOG  = "TABLE_CATALOG" ; // table catalog (may be null) 
+	/*  2 */ private static final String TABLE_SCHEM    = "TABLE_SCHEM" ;   // table schema  
 	// NB : Specific ResultSet for Oracle : only one column with TABLE_SCHEM
 	protected static SchemaMetaData buildSchemaMetaData( ResultSet rs, int columnCount ) throws SQLException
 	{
@@ -46,37 +51,35 @@ public class MetaDataBuilder
 			// Specific case for ORACLE (only one column)
 		    catalogName = "" ;
 		}
-	    String schemaName  = rs.getString(TABLE_SCHEM);
-	    SchemaMetaData schemaMetaData = new SchemaMetaData( catalogName, schemaName );
-		
-		return schemaMetaData ;
+	    String schemaName = rs.getString(TABLE_SCHEM);
+	    return new SchemaMetaData( catalogName, schemaName );
 	}
 	
 	//--------------------------------------------------------------------------------------------
 	// TABLE 
 	//--------------------------------------------------------------------------------------------
 	// Each "table" description has the following columns : 
-	/*  1 */ private final static String TABLE_CAT      = "TABLE_CAT" ; // table catalog (may be null) 
-	//  2 */ private final static String TABLE_SCHEM    = "TABLE_SCHEM" ; // table schema (may be null) 
-	/*  3 */ private final static String TABLE_NAME     = "TABLE_NAME" ; // table name 
-	/*  4 */ private final static String TABLE_TYPE     = "TABLE_TYPE" ; // table type. Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY", "LOCAL TEMPORARY", "ALIAS", "SYNONYM". 
-	/*  5 */ private final static String REMARKS        = "REMARKS" ; // explanatory comment on the table 
-	//  6 */ private final static String TYPE_CAT       = "TYPE_CAT" ; // the types catalog (may be null) 
-	//  7 */ private final static String TYPE_SCHEM     = "TYPE_SCHEM" ; // the types schema (may be null) 
-	/*  8 */ private final static String TYPE_NAME      = "TYPE_NAME" ; // type name (may be null) 
-	//  9 */ private final static String SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME" ; // name of the designated "identifier" column of a typed table (may be null) 
-	// 10 */ private final static String REF_GENERATION = "REF_GENERATION" ; // specifies how values in SELF_REFERENCING_COL_NAME are created. Values are "SYSTEM", "USER", "DERIVED". (may be null)
+	/*  1 */ private static final String TABLE_CAT      = "TABLE_CAT" ; // table catalog (may be null) 
+	//  2 */ private static final String TABLE_SCHEM    = "TABLE_SCHEM" ; // table schema (may be null) 
+	/*  3 */ private static final String TABLE_NAME     = "TABLE_NAME" ; // table name 
+	/*  4 */ private static final String TABLE_TYPE     = "TABLE_TYPE" ; // table type. Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY", "LOCAL TEMPORARY", "ALIAS", "SYNONYM". 
+	/*  5 */ private static final String REMARKS        = "REMARKS" ; // explanatory comment on the table 
+	//  6 */ private static final String TYPE_CAT       = "TYPE_CAT" ; // the types catalog (may be null) 
+	//  7 */ private static final String TYPE_SCHEM     = "TYPE_SCHEM" ; // the types schema (may be null) 
+	/*  8 */ private static final String TYPE_NAME      = "TYPE_NAME" ; // type name (may be null) 
+	//  9 */ private static final String SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME" ; // name of the designated "identifier" column of a typed table (may be null) 
+	// 10 */ private static final String REF_GENERATION = "REF_GENERATION" ; // specifies how values in SELF_REFERENCING_COL_NAME are created. Values are "SYSTEM", "USER", "DERIVED". (may be null)
 	
-//	/*  1 */ private final static int TABLE_CAT      = 1 ; // table catalog (may be null) 
-//	/*  2 */ private final static int TABLE_SCHEM    = 2 ; // table schema (may be null) 
-//	/*  3 */ private final static int TABLE_NAME     = 3 ; // table name 
-//	/*  4 */ private final static int TABLE_TYPE     = 4 ; // table type. Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY", "LOCAL TEMPORARY", "ALIAS", "SYNONYM". 
-//	/*  5 */ private final static int REMARKS        = 5 ; // explanatory comment on the table 
-//	//  6 */ private final static String TYPE_CAT       = "TYPE_CAT" ; // the types catalog (may be null) 
-//	//  7 */ private final static String TYPE_SCHEM     = "TYPE_SCHEM" ; // the types schema (may be null) 
-//	/*  8 */ private final static int TYPE_NAME      = 8 ; // type name (may be null) 
-//	//  9 */ private final static String SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME" ; // name of the designated "identifier" column of a typed table (may be null) 
-//	// 10 */ private final static String REF_GENERATION = "REF_GENERATION" ; // specifies how values in SELF_REFERENCING_COL_NAME are created. Values are "SYSTEM", "USER", "DERIVED". (may be null) 
+//	/*  1 */ private static final int TABLE_CAT      = 1 ; // table catalog (may be null) 
+//	/*  2 */ private static final int TABLE_SCHEM    = 2 ; // table schema (may be null) 
+//	/*  3 */ private static final int TABLE_NAME     = 3 ; // table name 
+//	/*  4 */ private static final int TABLE_TYPE     = 4 ; // table type. Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY", "LOCAL TEMPORARY", "ALIAS", "SYNONYM". 
+//	/*  5 */ private static final int REMARKS        = 5 ; // explanatory comment on the table 
+//	//  6 */ private static final String TYPE_CAT       = "TYPE_CAT" ; // the types catalog (may be null) 
+//	//  7 */ private static final String TYPE_SCHEM     = "TYPE_SCHEM" ; // the types schema (may be null) 
+//	/*  8 */ private static final int TYPE_NAME      = 8 ; // type name (may be null) 
+//	//  9 */ private static final String SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME" ; // name of the designated "identifier" column of a typed table (may be null) 
+//	// 10 */ private static final String REF_GENERATION = "REF_GENERATION" ; // specifies how values in SELF_REFERENCING_COL_NAME are created. Values are "SYSTEM", "USER", "DERIVED". (may be null) 
 	//--------------------------------------------------------------------------------------------
 	protected static TableMetaData buildTableMetaData( ResultSet rs ) throws SQLException
 	{
@@ -86,32 +89,30 @@ public class MetaDataBuilder
 	    String tableType   = rs.getString(TABLE_TYPE);
 	    String comment     = rs.getString(REMARKS);
 
-	    TableMetaData tableMetaData = new TableMetaData(tableName, tableType, catalogName, schemaName, comment);
-		
-		return tableMetaData ;
+	    return new TableMetaData(tableName, tableType, catalogName, schemaName, comment);
 	}
 	
 	//--------------------------------------------------------------------------------------------
 	// TABLE COLUMN
 	//--------------------------------------------------------------------------------------------
 	// Each "column" description has the following columns: 
-	//  1    private final static String TABLE_CAT      = "TABLE_CAT" ; // table catalog (may be null) 
-	//  2    private final static String TABLE_SCHEM    = "TABLE_SCHEM" ; // table schema (may be null) 
-	//  3    private final static String TABLE_NAME     = "TABLE_NAME" ; // table name 
-	/*  4 */ private final static String COLUMN_NAME    = "COLUMN_NAME" ;
-	/*  5 */ private final static String DATA_TYPE      = "DATA_TYPE" ; // int : SQL type from java.sql.Types
-	//  6    private final static String TYPE_NAME      = "TYPE_NAME" ; // type name (may be null) 
-	/*  7 */ private final static String COLUMN_SIZE    = "COLUMN_SIZE" ; // int : column size. For char or date types this is the maximum number of characters, for numeric or decimal types this is precision. 
+	//  1    private static final String TABLE_CAT      = "TABLE_CAT" ; // table catalog (may be null) 
+	//  2    private static final String TABLE_SCHEM    = "TABLE_SCHEM" ; // table schema (may be null) 
+	//  3    private static final String TABLE_NAME     = "TABLE_NAME" ; // table name 
+	/*  4 */ private static final String COLUMN_NAME    = "COLUMN_NAME" ;
+	/*  5 */ private static final String DATA_TYPE      = "DATA_TYPE" ; // int : SQL type from java.sql.Types
+	//  6    private static final String TYPE_NAME      = "TYPE_NAME" ; // type name (may be null) 
+	/*  7 */ private static final String COLUMN_SIZE    = "COLUMN_SIZE" ; // int : column size. For char or date types this is the maximum number of characters, for numeric or decimal types this is precision. 
 	//  8    BUFFER_LENGTH ( not used )
-	/*  9 */ private final static String DECIMAL_DIGITS = "DECIMAL_DIGITS" ; // int : the number of fractional digits 
-	/* 10 */ private final static String NUM_PREC_RADIX = "NUM_PREC_RADIX" ; // int : Radix (typically either 10 or 2) 
-	/* 11 */ private final static String NULLABLE       = "NULLABLE" ; // int : is NULL allowed
+	/*  9 */ private static final String DECIMAL_DIGITS = "DECIMAL_DIGITS" ; // int : the number of fractional digits 
+	/* 10 */ private static final String NUM_PREC_RADIX = "NUM_PREC_RADIX" ; // int : Radix (typically either 10 or 2) 
+	/* 11 */ private static final String NULLABLE       = "NULLABLE" ; // int : is NULL allowed
 	// 12    REMARKS 
-	/* 13 */ private final static String COLUMN_DEF     = "COLUMN_DEF" ; // String : default value (may be null) 
+	/* 13 */ private static final String COLUMN_DEF     = "COLUMN_DEF" ; // String : default value (may be null) 
 	// 14    SQL_DATA_TYPE // int : unused  
 	// 15    SQL_DATETIME_SUB // int : unused  
-	/* 16 */ private final static String CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH" ; // int : for char types the maximum number of bytes in the column
-	/* 17 */ private final static String ORDINAL_POSITION  = "ORDINAL_POSITION" ; // int : index of column in table (starting at 1) 
+	/* 16 */ private static final String CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH" ; // int : for char types the maximum number of bytes in the column
+	/* 17 */ private static final String ORDINAL_POSITION  = "ORDINAL_POSITION" ; // int : index of column in table (starting at 1) 
 	// 18 to 22 unused 
 	//--------------------------------------------------------------------------------------------
 	protected static ColumnMetaData buildColumnMetaData( ResultSet rs ) throws SQLException
@@ -126,21 +127,17 @@ public class MetaDataBuilder
 	    String tableName    = rs.getString(TABLE_NAME);
 
 	    //--- 4 : Column Name
-	    //String colName = rs.getString(4);
 	    String colName = rs.getString(COLUMN_NAME);
 	
 	    //--- 5 : Column JDBC Type (cf "java.sql.Types" )
-	    //int jdbcTypeCode = rs.getInt(5);
 	    int jdbcTypeCode = rs.getInt(DATA_TYPE);
 	
 	    //--- 6 : Column Type (original database type)
-	    //String dbTypeName = rs.getString(6);
 	    String dbTypeName = rs.getString(TYPE_NAME);	    
 	
 	    //--- 7 : Column Size : 
 	    // For "char" or "date" types this is the maximum number of characters, 
 	    // for "numeric" or "decimal" types this is precision
-	    //int size = rs.getInt(7); // 7 : COLUMN_SIZE  
 	    int size = rs.getInt(COLUMN_SIZE); 
 
 	    //--- 9 : the number of fractional digits  
@@ -151,7 +148,6 @@ public class MetaDataBuilder
 	    
 	    //--- 11 : Column Nullable (original database type)
 	    boolean notNull = false;
-	    //int nullable = rs.getInt(11);
 	    int nullable = rs.getInt(NULLABLE);
 	    // 3 values :
 	    // * columnNoNulls - might not allow NULL values
@@ -190,12 +186,12 @@ public class MetaDataBuilder
 	// PRIMARY KEY COLUMNS
 	//--------------------------------------------------------------------------------------------
 	// Each "primary key column" description has the following columns :
-	//  1    private final static String TABLE_CAT      = "TABLE_CAT" ; // table catalog (may be null) 
-	//  2    private final static String TABLE_SCHEM    = "TABLE_SCHEM" ; // table schema (may be null) 
-	//  3    private final static String TABLE_NAME     = "TABLE_NAME" ; // table name 
-	//  4    private final static String COLUMN_NAME    = "COLUMN_NAME" ;
-	/*  5 */ private final static String KEY_SEQ        = "KEY_SEQ" ; // short => sequence number within primary key
-	/*  6 */ private final static String PK_NAME        = "PK_NAME" ; // String => primary key name (may be null) 
+	//  1    private static final String TABLE_CAT      = "TABLE_CAT" ; // table catalog (may be null) 
+	//  2    private static final String TABLE_SCHEM    = "TABLE_SCHEM" ; // table schema (may be null) 
+	//  3    private static final String TABLE_NAME     = "TABLE_NAME" ; // table name 
+	//  4    private static final String COLUMN_NAME    = "COLUMN_NAME" ; // column name
+	/*  5 */ private static final String KEY_SEQ        = "KEY_SEQ" ; // short => sequence number within primary key
+	/*  6 */ private static final String PK_NAME        = "PK_NAME" ; // String => primary key name (may be null) 
 	
 	//--------------------------------------------------------------------------------------------
 	protected static PrimaryKeyColumnMetaData buildPKColumnMetaData( ResultSet rs ) throws SQLException
@@ -218,25 +214,25 @@ public class MetaDataBuilder
 	//--------------------------------------------------------------------------------------------
 	// FOREIGN KEY COLUMNS
 	//--------------------------------------------------------------------------------------------
-	/*  1 */ private final static String PKTABLE_CAT    = "PKTABLE_CAT" ; // primary key table catalog being imported (may be null) 
-	/*  2 */ private final static String PKTABLE_SCHEM  = "PKTABLE_SCHEM" ; // primary key table schema being imported (may be null) 
-	/*  3 */ private final static String PKTABLE_NAME   = "PKTABLE_NAME" ; // primary key table name being imported 
-	/*  4 */ private final static String PKCOLUMN_NAME  = "PKCOLUMN_NAME" ; // primary key column name being imported 
+	/*  1 */ private static final String PKTABLE_CAT    = "PKTABLE_CAT" ; // primary key table catalog being imported (may be null) 
+	/*  2 */ private static final String PKTABLE_SCHEM  = "PKTABLE_SCHEM" ; // primary key table schema being imported (may be null) 
+	/*  3 */ private static final String PKTABLE_NAME   = "PKTABLE_NAME" ; // primary key table name being imported 
+	/*  4 */ private static final String PKCOLUMN_NAME  = "PKCOLUMN_NAME" ; // primary key column name being imported 
 
-	/*  5 */ private final static String FKTABLE_CAT    = "FKTABLE_CAT" ; // foreign key table catalog (may be null) 
-	/*  6 */ private final static String FKTABLE_SCHEM  = "FKTABLE_SCHEM" ; // foreign key table schema (may be null) 
-	/*  7 */ private final static String FKTABLE_NAME   = "FKTABLE_NAME" ; // foreign key table name 
-	/*  8 */ private final static String FKCOLUMN_NAME  = "FKCOLUMN_NAME" ; // foreign key column name 
+	/*  5 */ private static final String FKTABLE_CAT    = "FKTABLE_CAT" ; // foreign key table catalog (may be null) 
+	/*  6 */ private static final String FKTABLE_SCHEM  = "FKTABLE_SCHEM" ; // foreign key table schema (may be null) 
+	/*  7 */ private static final String FKTABLE_NAME   = "FKTABLE_NAME" ; // foreign key table name 
+	/*  8 */ private static final String FKCOLUMN_NAME  = "FKCOLUMN_NAME" ; // foreign key column name 
 	
-	//  9    private final static String KEY_SEQ        = "KEY_SEQ" ; // short => sequence number within foreign key
+	//  9    private static final String KEY_SEQ        = "KEY_SEQ" ; // short => sequence number within foreign key
 
-	/* 10 */ private final static String UPDATE_RULE    = "UPDATE_RULE" ; // short => What happens to a foreign key when the primary key is updated:  
-	/* 11 */ private final static String DELETE_RULE    = "DELETE_RULE" ; // short => What happens to the foreign key when primary is deleted. 
+	/* 10 */ private static final String UPDATE_RULE    = "UPDATE_RULE" ; // short => What happens to a foreign key when the primary key is updated:  
+	/* 11 */ private static final String DELETE_RULE    = "DELETE_RULE" ; // short => What happens to the foreign key when primary is deleted. 
 	
-	/* 12 */ private final static String FK_NAME        = "FK_NAME" ; // String => foreign key name (may be null) 
-	// 13    private final static String PK_NAME        = "PK_NAME" ; // String => primary key name (may be null)  
+	/* 12 */ private static final String FK_NAME        = "FK_NAME" ; // String => foreign key name (may be null) 
+	// 13    private static final String PK_NAME        = "PK_NAME" ; // String => primary key name (may be null)  
 
-	/* 14 */ private final static String DEFERRABILITY  = "DEFERRABILITY" ; // short => can the evaluation of foreign key constraints be deferred until commit
+	/* 14 */ private static final String DEFERRABILITY  = "DEFERRABILITY" ; // short => can the evaluation of foreign key constraints be deferred until commit
 
 	//--------------------------------------------------------------------------------------------
 	protected static ForeignKeyColumnMetaData buildFKColumnMetaData( ResultSet rs ) throws SQLException

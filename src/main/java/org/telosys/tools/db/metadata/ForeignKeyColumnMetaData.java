@@ -146,11 +146,7 @@ public class ForeignKeyColumnMetaData implements Comparable<ForeignKeyColumnMeta
 	}
 
 	//--------------------------------------------------------------------------------------------
-//	public int compareTo(Object obj) {
-//		ForeignKeyColumnMetaData fk = (ForeignKeyColumnMetaData) obj;
 	public int compareTo(ForeignKeyColumnMetaData fk) {
-		
-		//return fkName.compareTo(fk.getFkName());
 		String thisFkName = ( this.fkName != null ? this.fkName : "" );
 		String otherFkName = ( fk.getFkName() != null ? fk.getFkName() : "" );		
 		return thisFkName.compareTo(otherFkName);

@@ -33,8 +33,7 @@ public class PrimaryKeyColumnMetaData
 	
 	//----------------------------------------------------------------------------------
 	public PrimaryKeyColumnMetaData(String catalogName, String schemaName, String tableName, 
-			String columnName, short pkSequence, String pkName) 
-	{
+			String columnName, short pkSequence, String pkName) {
 		super();
 		this.catalogName = catalogName;
 		this.schemaName = schemaName;
@@ -45,42 +44,33 @@ public class PrimaryKeyColumnMetaData
 		this.pkName = pkName;
 	}
 
-
 	//----------------------------------------------------------------------------------
 	public String getCatalogName() {
 		return catalogName;
 	}
-
 
 	//----------------------------------------------------------------------------------
 	public String getColumnName() {
 		return columnName;
 	}
 
-
 	//----------------------------------------------------------------------------------
 	public String getPkName() {
 		return pkName;
 	}
-
 
 	//----------------------------------------------------------------------------------
 	public short getPkSequence() {
 		return pkSequence;
 	}
 
-
 	//----------------------------------------------------------------------------------
 	public String getSchemaName() {
 		return schemaName;
 	}
 
-
 	//----------------------------------------------------------------------------------
 	public String getTableName() {
 		return tableName;
 	}
-	
-
-	
 }

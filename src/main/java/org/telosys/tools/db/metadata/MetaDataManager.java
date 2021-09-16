@@ -510,9 +510,7 @@ public class MetaDataManager {
 		else {
 			throw new RuntimeException("buildSqlRequest() : invalid step value");
 		}
-		String sqlRequest = "SELECT * FROM " + fullTableName + " WHERE 1 = 0" ;
-		//log("SQL request (step="+step+") : " + sqlRequest );
-		return sqlRequest;
+		return "SELECT * FROM " + fullTableName + " WHERE 1 = 0" ;
 	}
 	
 	private String buildFullTableName(String schemaName, String tableName, String quote) {

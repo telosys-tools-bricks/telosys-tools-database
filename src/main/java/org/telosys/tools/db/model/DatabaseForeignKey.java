@@ -20,35 +20,25 @@ import java.util.List;
 
 import org.telosys.tools.db.metadata.ForeignKeyColumnMetaData;
 
-public class DatabaseForeignKey 
-{
+public class DatabaseForeignKey {
 
 	private final String foreignKeyName ;
 	
-	private LinkedList<DatabaseForeignKeyColumn> foreignKeyColumns = new LinkedList<DatabaseForeignKeyColumn>();
+	private LinkedList<DatabaseForeignKeyColumn> foreignKeyColumns = new LinkedList<>();
 
-	public DatabaseForeignKey(String foreignKeyName, List<ForeignKeyColumnMetaData> fkColumnsMetaData ) 
-	{
+	public DatabaseForeignKey(String foreignKeyName, List<ForeignKeyColumnMetaData> fkColumnsMetaData ) {
 		super();
 		
 		//--- The name of the Foreign Key
 		this.foreignKeyName = foreignKeyName;
 		
 		//--- The columns of the Foreign Key
-		if ( fkColumnsMetaData != null )
-		{
-//			Iterator iter = fkColumnsMetaData.iterator() ;
-//			while ( iter.hasNext() )
-//			{
-//				ForeignKeyColumnMetaData fkCol = (ForeignKeyColumnMetaData) iter.next();
+		if ( fkColumnsMetaData != null ) {
 			for ( ForeignKeyColumnMetaData fkCol : fkColumnsMetaData ) {
-				if ( fkCol != null )
-				{
+				if ( fkCol != null ) {
 					String name = fkCol.getFkName();
-					if ( name != null )
-					{
-						if ( name.equalsIgnoreCase(foreignKeyName) )
-						{
+					if ( name != null ) {
+						if ( name.equalsIgnoreCase(foreignKeyName) ) {
 							DatabaseForeignKeyColumn dbFK = new DatabaseForeignKeyColumn(fkCol);
 							foreignKeyColumns.addLast(dbFK);
 						}
@@ -56,7 +46,6 @@ public class DatabaseForeignKey
 				}
 			}
 		}
-		
 	}
 
 	public String getForeignKeyName() {

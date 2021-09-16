@@ -30,13 +30,6 @@ public class TableMetaData
 	
 	private String comment ; // explanatory comment on the table 
 
-	//private Hashtable columnsMetaData = new Hashtable() ; 
-
-	//private Hashtable foreignKeysMetaData = new Hashtable() ;
-
-	// private PrimaryKeyMetaData primaryKeyMetaData ;
-
-	
 	//----------------------------------------------------------------------------------
 	public TableMetaData(String tableName, String tableType, String catalogName, String schemaName, String comment) {
 		super();
@@ -52,51 +45,44 @@ public class TableMetaData
 		return tableName;
 	}
 
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
-	
+//	public void setTableName(String tableName) {
+//		this.tableName = tableName;
+//	}
 	
 	//----------------------------------------------------------------------------------
 	public String getCatalogName() {
 		return catalogName;
 	}
 
-	public void setCatalogName(String catalogName) {
-		this.catalogName = catalogName;
-	}
+//	public void setCatalogName(String catalogName) {
+//		this.catalogName = catalogName;
+//	}
 
-	
 	//----------------------------------------------------------------------------------
 	public String getComment() {
 		return comment;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-	
+//	public void setComment(String comment) {
+//		this.comment = comment;
+//	}
 
 	//----------------------------------------------------------------------------------
 	public String getSchemaName() {
 		return schemaName;
 	}
 
-	public void setSchemaName(String schemaName) {
-		this.schemaName = schemaName;
-	}
-	
-
+//	public void setSchemaName(String schemaName) {
+//		this.schemaName = schemaName;
+//	}
 
 	//----------------------------------------------------------------------------------
 	public String getTableType() {
 		return tableType;
 	}
 
-	public void setTableType(String tableType) {
-		this.tableType = tableType;
-	}
-	
-
+//	public void setTableType(String tableType) {
+//		this.tableType = tableType;
+//	}
 	
 }

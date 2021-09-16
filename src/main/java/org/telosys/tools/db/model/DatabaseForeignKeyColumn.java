@@ -91,9 +91,9 @@ public class DatabaseForeignKeyColumn {
 		return foreignKeyColumnMetaData.getUpdateRule();
 	}
 
-	public int hashCode() {
-		return foreignKeyColumnMetaData.hashCode();
-	}
+//	public int hashCode() {
+//		return foreignKeyColumnMetaData.hashCode();
+//	}
 
 	public String toString() {
 		return foreignKeyColumnMetaData.toString();

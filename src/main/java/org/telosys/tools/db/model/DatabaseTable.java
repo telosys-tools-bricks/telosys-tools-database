@@ -31,9 +31,9 @@ public class DatabaseTable {
 
 	private String        primaryKeyName  = null ;
 	
-	private final LinkedList<DatabaseColumn>     columns     = new LinkedList<DatabaseColumn>();
+	private final LinkedList<DatabaseColumn>     columns     = new LinkedList<>();
 	
-	private final LinkedList<DatabaseForeignKey> foreignKeys = new LinkedList<DatabaseForeignKey>();
+	private final LinkedList<DatabaseForeignKey> foreignKeys = new LinkedList<>();
 	
 	
 	public DatabaseTable(TableMetaData tableMetaData, 
@@ -47,15 +47,9 @@ public class DatabaseTable {
 		this.tableMetaData = tableMetaData ;
 		
 		//--- Table Primary Key 
-		if ( pkColumnsMetaData != null )
-		{
-//			Iterator iter = pkColumnsMetaData.iterator() ;
-//			while ( iter.hasNext() )
-//			{
-//				PrimaryKeyColumnMetaData pkCol = (PrimaryKeyColumnMetaData) iter.next();
+		if ( pkColumnsMetaData != null ) {
 			for( PrimaryKeyColumnMetaData pkCol : pkColumnsMetaData ) {
-				if ( pkCol != null )
-				{
+				if ( pkCol != null ) {
 					hasPrimaryKey = true ;
 					primaryKeyName = pkCol.getPkName();
 				}
@@ -63,21 +57,14 @@ public class DatabaseTable {
 		}
 		
 		//--- Table Columns 
-		if ( columnsMetaData != null )
-		{
-//			Iterator iter = columnsMetaData.iterator() ;
-//			while ( iter.hasNext() )
-//			{
-//				ColumnMetaData colMetaData = (ColumnMetaData) iter.next();
+		if ( columnsMetaData != null ) {
 			for( ColumnMetaData colMetaData : columnsMetaData ) {
-				if ( colMetaData != null )
-				{
+				if ( colMetaData != null ) {
 					//--- Is it in the Primary Key ?
 					boolean flagPK     = false ;
 					short   pkSequence = 0 ;
 					PrimaryKeyColumnMetaData pkCol = getPrimaryKeyColumnMetaData(colMetaData.getColumnName(), pkColumnsMetaData);
-					if ( pkCol != null )
-					{
+					if ( pkCol != null ) {
 						flagPK = true ;
 						pkSequence = pkCol.getPkSequence();
 					}
@@ -93,18 +80,11 @@ public class DatabaseTable {
 		}
 		
 		//--- Table Foreign Keys ( NB : the Foreign Keys MetaData are supposed to be sorted by name )
-		if ( fkColumnsMetaData != null )
-		{
+		if ( fkColumnsMetaData != null ) {
 			String fkname = "";
-//			Iterator iter = fkColumnsMetaData.iterator() ;
-//			while ( iter.hasNext() )
-//			{
-//				ForeignKeyColumnMetaData fkCol = (ForeignKeyColumnMetaData) iter.next();
 			for( ForeignKeyColumnMetaData fkCol : fkColumnsMetaData ) {
-				if ( fkCol != null )
-				{
-					if ( ! fkCol.getFkName().equals(fkname) ) 
-					{
+				if ( fkCol != null ) {
+					if ( ! fkCol.getFkName().equals(fkname) ) {
 						// Not the same Foreign Key name => create a new FK instance
 						DatabaseForeignKey fk = new DatabaseForeignKey(fkCol.getFkName(), fkColumnsMetaData);
 						foreignKeys.addLast(fk);
@@ -114,7 +94,6 @@ public class DatabaseTable {
 				}
 			}
 		}
-		
 	}
 
 	/**
@@ -127,20 +106,12 @@ public class DatabaseTable {
 	 */
 	private PrimaryKeyColumnMetaData getPrimaryKeyColumnMetaData(String colName, List<PrimaryKeyColumnMetaData> pkColumnsMetaData)
 	{
-		if ( pkColumnsMetaData != null )
-		{
-//			Iterator iter = pkColumnsMetaData.iterator() ;
-//			while ( iter.hasNext() )
-//			{
-//				PrimaryKeyColumnMetaData pkCol = (PrimaryKeyColumnMetaData) iter.next();
+		if ( pkColumnsMetaData != null ) {
 			for ( PrimaryKeyColumnMetaData pkCol : pkColumnsMetaData ) {
-				if ( pkCol != null )
-				{
+				if ( pkCol != null ) {
 					String pkColName = pkCol.getColumnName();
-					if ( pkColName != null )
-					{
-						if ( pkColName.equalsIgnoreCase(colName) )
-						{
+					if ( pkColName != null ) {
+						if ( pkColName.equalsIgnoreCase(colName) ) {
 							// Yes, this column is a part of the PK
 							return pkCol ;
 						}
@@ -151,23 +122,14 @@ public class DatabaseTable {
 		return null ;
 	}
 	
-	private int usedInForeignKeys(String colName, List<ForeignKeyColumnMetaData> fkColumnsMetaData)
-	{
+	private int usedInForeignKeys(String colName, List<ForeignKeyColumnMetaData> fkColumnsMetaData) {
 		int n = 0 ;
-		if ( fkColumnsMetaData != null )
-		{
-//			Iterator iter = fkColumnsMetaData.iterator() ;
-//			while ( iter.hasNext() )
-//			{
-//				ForeignKeyColumnMetaData fkCol = (ForeignKeyColumnMetaData) iter.next();
+		if ( fkColumnsMetaData != null ) {
 			for ( ForeignKeyColumnMetaData fkCol : fkColumnsMetaData ) {
-				if ( fkCol != null )
-				{
+				if ( fkCol != null ) {
 					String name = fkCol.getFkColumnName();
-					if ( name != null )
-					{
-						if ( name.equalsIgnoreCase(colName) )
-						{
+					if ( name != null ) {
+						if ( name.equalsIgnoreCase(colName) ) {
 							// Yes, this column is used in a Foreign Key
 							n++ ;
 						}
@@ -245,32 +207,20 @@ public class DatabaseTable {
 		return foreignKeys;
 	}
 	
-	public DatabaseColumn getColumnByName(String columnName)
-	{
+	public DatabaseColumn getColumnByName(String columnName) {
 		if ( null == columnName ) throw new IllegalArgumentException("Column name is null");
-//		Iterator iter = columns.iterator();
-//		while ( iter.hasNext() )
-//		{
-//			DatabaseColumn databaseColumn = (DatabaseColumn) iter.next();
 		for ( DatabaseColumn databaseColumn : this.columns ) {
-			if ( columnName.equals( databaseColumn.getColumnName() ) )
-			{
+			if ( columnName.equals( databaseColumn.getColumnName() ) ) {
 				return databaseColumn ;
 			}
 		}
 		return null ;
 	}
 	
-	public DatabaseForeignKey getForeignKeyByName(String fkName)
-	{
+	public DatabaseForeignKey getForeignKeyByName(String fkName) {
 		if ( null == fkName ) throw new IllegalArgumentException("Foreign Key name is null");
-//		Iterator iter = foreignKeys.iterator();
-//		while ( iter.hasNext() )
-//		{
-//			DatabaseForeignKey foreignKey = (DatabaseForeignKey) iter.next();
 		for ( DatabaseForeignKey foreignKey : this.foreignKeys ) {
-			if ( fkName.equals( foreignKey.getForeignKeyName() ) )
-			{
+			if ( fkName.equals( foreignKey.getForeignKeyName() ) ) {
 				return foreignKey ;
 			}
 		}

@@ -12,7 +12,7 @@
 
 	<name>telosys-tools-database</name>
 	<artifactId>telosys-tools-database</artifactId>
-    <version>3.0.0</version>
+    <version>3.4.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<dependencies>
