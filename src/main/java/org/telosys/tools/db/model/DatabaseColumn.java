@@ -74,8 +74,34 @@ public class DatabaseColumn {
 		return columnMetaData.getNotNullAsString();
 	}
 
+	/**
+	 * Returns the column size <br>
+	 * For CHAR/VARCHAR types this is the maximum number of characters, <br>
+	 * for NUMERIC or DECIMAL types this is the "precision"	 <br>
+	 * Example : VARCHAR(max)  NUMERIC(precision,scale)  DECIMAL(precision,scale) 
+	 * @return
+	 */
 	public int getSize() {
 		return columnMetaData.getSize();
+	}
+
+	/**
+	 * Returns the number of fractional digits (or "scale") <br>
+	 * Example : NUMERIC(precision,scale)   DECIMAL(precision,scale) 
+	 * (since v 3.4.0)
+	 * @return
+	 */
+	public int getDecimalDigits() {
+		return columnMetaData.getDecimalDigits();
+	}
+
+	/**
+	 * Radix or "base" (typically either 10 or 2) 
+	 * (since v 3.4.0)
+	 * @return
+	 */
+	public int getNumPrecRadix() {
+		return columnMetaData.getNumPrecRadix();
 	}
 
 	public boolean isNotNull() {

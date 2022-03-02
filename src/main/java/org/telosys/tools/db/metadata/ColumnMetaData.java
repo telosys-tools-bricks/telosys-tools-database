@@ -102,7 +102,25 @@ public class ColumnMetaData
 	public int getSize() {
 		return size;
 	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	 * Returns the number of fractional digits
+	 * @return
+	 */
+	public int getDecimalDigits() {
+		return decimalDigits;
+	}
 
+	//------------------------------------------------------------------------------
+	/**
+	 * Returns the radix (typically either 10 or 2)
+	 * @return
+	 */
+	public int getNumPrecRadix() {
+		return numPrecRadix;
+	}
+	
 	//------------------------------------------------------------------------------
 	/**
 	 * Returns the JDBC Type of the column (cf "java.sql.Types" )
@@ -148,15 +166,6 @@ public class ColumnMetaData
 	
 	//------------------------------------------------------------------------------
 	/**
-	 * Returns the number of fractional digits
-	 * @return
-	 */
-	public int getDecimalDigits() {
-		return decimalDigits;
-	}
-
-	//------------------------------------------------------------------------------
-	/**
 	 * Returns the default value (may be null) 
 	 * @return
 	 */
@@ -164,15 +173,6 @@ public class ColumnMetaData
 		return defaultValue;
 	}
 
-	//------------------------------------------------------------------------------
-	/**
-	 * Returns the radix (typically either 10 or 2)
-	 * @return
-	 */
-	public int getNumPrecRadix() {
-		return numPrecRadix;
-	}
-	
 	//------------------------------------------------------------------------------
 	/**
 	 * Returns for char types the maximum number of bytes in the column 
