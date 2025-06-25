@@ -1,6 +1,10 @@
 
 NB: not yet tested
 
+cf 
+ - https://www.postgresql.org/docs/16/catalog-pg-constraint.html 
+ - https://www.postgresql.org/docs/16/catalog-pg-attribute.html   (stores information about table columns)
+ - https://www.postgresql.org/docs/16/catalog-pg-class.html  ( describes tables and other objects that have columns or are otherwise similar to a table )
 
     private static List<String> findPostgresUniques(Connection conn, String table) throws SQLException {
         String sql = """
