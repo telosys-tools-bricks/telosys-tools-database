@@ -12,8 +12,15 @@
 
 	<name>telosys-tools-database</name>
 	<artifactId>telosys-tools-database</artifactId>
-    <version>4.0.0</version>
+    <version>4.2.1</version>
 	<packaging>jar</packaging>
+	
+	<properties>
+		<maven.build.timestamp.format>yyMMdd.HHmmss.S</maven.build.timestamp.format>	<!-- day in the year . min . milliseconds -->	
+		<build.id>${maven.build.timestamp}</build.id> <!-- for resource filtering -->
+		<!-- TEMPORARELY -->
+		<!-- <properties> <skip-license>true</skip-license> </properties> -->
+	</properties>
 
 	<dependencies>
 
@@ -32,5 +39,25 @@
 		</dependency>
 
 	</dependencies>
+
+	<build>
+	    <resources>
+	    	<!-- Filtering file with build.id  -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>telosys-db-metadata-build.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>telosys-db-metadata-build.properties</exclude>
+				</excludes>
+			</resource>
+	    </resources>
+	</build>
 
 </project>
