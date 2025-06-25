@@ -31,13 +31,20 @@
  		</dependency>
 		
 		<!-- for tests -->
+		<!-- 
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derbyclient</artifactId>
 			<version>10.9.1.0</version>
 			<scope>test</scope>
 		</dependency>
-
+		 -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.2.220</version>
+			<scope>test</scope>
+    	</dependency>
 	</dependencies>
 
 	<build>

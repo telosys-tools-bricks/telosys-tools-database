@@ -1,0 +1,13 @@
+
+NB: not yet tested
+
+    private static List<String> findOracleUniques(Connection conn, String table) throws SQLException {
+        String sql = """
+            SELECT ucc.column_name
+            FROM user_constraints uc
+            JOIN user_cons_columns ucc ON uc.constraint_name = ucc.constraint_name
+            WHERE uc.constraint_type = 'U'
+              AND uc.table_name = UPPER(?)
+            """;
+        return runQuery(conn, sql, table);
+    }

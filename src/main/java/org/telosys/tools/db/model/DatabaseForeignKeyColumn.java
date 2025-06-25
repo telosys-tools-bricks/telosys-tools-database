@@ -27,14 +27,6 @@ public class DatabaseForeignKeyColumn {
 		this.foreignKeyColumnMetaData = foreignKeyColumnMetaData;
 	}
 
-//	public int compareTo(Object obj) {
-//		return foreignKeyColumnMetaData.compareTo(obj);
-//	}
-//
-//	public boolean equals(Object arg0) {
-//		return foreignKeyColumnMetaData.equals(arg0);
-//	}
-
 	public int getDeferrability() {
 		return foreignKeyColumnMetaData.getDeferrability();
 	}
@@ -90,10 +82,6 @@ public class DatabaseForeignKeyColumn {
 	public int getUpdateRule() {
 		return foreignKeyColumnMetaData.getUpdateRule();
 	}
-
-//	public int hashCode() {
-//		return foreignKeyColumnMetaData.hashCode();
-//	}
 
 	public String toString() {
 		return foreignKeyColumnMetaData.toString();

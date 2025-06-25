@@ -170,16 +170,13 @@ public class MetaDataBuilder {
 	    //--- 17 : 
 	    int ordinalPosition = rs.getInt(ORDINAL_POSITION); 
 
-	    ColumnMetaData columnMetaData = 
-			new ColumnMetaData(
+		return new ColumnMetaData(
 					tableCatalog, tableSchema, tableName,
 					colName, jdbcTypeCode, dbTypeName, notNull, size,
 					decimalDigits, numPrecRadix, 
 					charOctetLength, ordinalPosition,
 					defaultValue,
 					comment);
-		
-		return columnMetaData ;
 	}
 	
 	//--------------------------------------------------------------------------------------------
@@ -203,12 +200,9 @@ public class MetaDataBuilder {
 	    short  keySequence  = rs.getShort(KEY_SEQ);
 	    String pkName       = rs.getString(PK_NAME);
 	    
-	    PrimaryKeyColumnMetaData primaryKeyMetaData = 
-	    	new PrimaryKeyColumnMetaData(
+	    return new PrimaryKeyColumnMetaData(
 	    			tableCatalog, tableSchema, tableName, 
 	    			columnName, keySequence, pkName);
-	    
-	    return primaryKeyMetaData ;
 	}
 	
 	//--------------------------------------------------------------------------------------------
@@ -257,14 +251,11 @@ public class MetaDataBuilder {
 	    
 	    short  deferrability  = rs.getShort(DEFERRABILITY);
 
-	    ForeignKeyColumnMetaData foreignKeyMetaData = 
-	    	new ForeignKeyColumnMetaData(
+	    return new ForeignKeyColumnMetaData(
 	    			pkTableCatalog, pkTableSchema, pkTableName, pkColumnName,
 	    			fkTableCatalog, fkTableSchema, fkTableName, fkColumnName,
 	    			keySequence, updateRule, deleteRule,
 	    			fkName, pkName,
 	    			deferrability );
-	    
-	    return foreignKeyMetaData ;
 	}
 }

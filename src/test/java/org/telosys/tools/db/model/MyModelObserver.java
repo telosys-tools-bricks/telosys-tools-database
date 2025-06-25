@@ -1,18 +1,16 @@
 package org.telosys.tools.db.model;
 
 import org.telosys.tools.commons.observer.TaskObserver2;
+import org.telosys.tools.db.junit.utils.Output;
 
 public class MyModelObserver implements TaskObserver2<Integer, String> {
 
-	public MyModelObserver() {
-	}
-	
 	@Override
 	public void notify(Integer level, String msg) {
 		if ( level == 1 ) {
-			System.out.println("---");			
+			Output.print("---");			
 		}
-		System.out.println("Model notification    #" + level + " : " + msg );			
+		Output.print("Model notification    #" + level + " : " + msg );			
 	}
 
 }

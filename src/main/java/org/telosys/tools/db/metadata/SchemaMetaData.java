@@ -34,17 +34,9 @@ public class SchemaMetaData
 		return catalogName;
 	}
 
-//	public void setCatalogName(String catalogName) {
-//		this.catalogName = catalogName;
-//	}
-	
 	//----------------------------------------------------------------------------------
 	public String getSchemaName() {
 		return schemaName;
 	}
 
-//	public void setSchemaName(String schemaName) {
-//		this.schemaName = schemaName;
-//	}
-	
 }

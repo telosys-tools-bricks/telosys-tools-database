@@ -1,0 +1,59 @@
+H2 index tables
+===============
+
+SELECT * FROM INFORMATION_SCHEMA.INDEX_COLUMNS;  ( index columns for all indexes : PK, FK, Unique )
+
+INDEX_CATALOG|INDEX_SCHEMA|INDEX_NAME            |TABLE_CATALOG|TABLE_SCHEMA|TABLE_NAME|COLUMN_NAME|ORDINAL_POSITION|ORDERING_SPECIFICATION|NULL_ORDERING|IS_UNIQUE|
+-------------+------------+----------------------+-------------+------------+----------+-----------+----------------+----------------------+-------------+---------+
+TESTDB       |PUBLIC      |PRIMARY_KEY_8         |TESTDB       |PUBLIC      |ORDERS    |ID         |               1|ASC                   |             |true     |
+TESTDB       |PUBLIC      |CONSTRAINT_INDEX_8    |TESTDB       |PUBLIC      |ORDERS    |USER_ID    |               1|ASC                   |FIRST        |false    |
+TESTDB       |PUBLIC      |PRIMARY_KEY_1         |TESTDB       |PUBLIC      |FOO       |ID         |               1|ASC                   |             |true     |
+TESTDB       |PUBLIC      |UQ_FOO_INDEX_1        |TESTDB       |PUBLIC      |FOO       |V1         |               1|ASC                   |FIRST        |true     |
+TESTDB       |PUBLIC      |UQ_FOO_INDEX_1        |TESTDB       |PUBLIC      |FOO       |V2         |               2|ASC                   |FIRST        |true     |
+TESTDB       |PUBLIC      |PRIMARY_KEY_4         |TESTDB       |PUBLIC      |USERS     |ID         |               1|ASC                   |             |true     |
+TESTDB       |PUBLIC      |UQ_USERS_EMAIL_INDEX_4|TESTDB       |PUBLIC      |USERS     |EMAIL      |               1|ASC                   |FIRST        |true     |
+
+"FOO" table has a unique index with 2 columns ( "CONSTRAINT uq_foo UNIQUE (v1, v2)" ) => use "ORDINAL_POSITION" to keep order 
+
+
+SELECT * FROM INFORMATION_SCHEMA.INDEXES; ( give the index type : "PRIMARY KEY", "INDEX", "UNIQUE INDEX" )
+
+INDEX_CATALOG|INDEX_SCHEMA|INDEX_NAME            |TABLE_CATALOG|TABLE_SCHEMA|TABLE_NAME|INDEX_TYPE_NAME|NULLS_DISTINCT|IS_GENERATED|REMARKS|INDEX_CLASS                       |
+-------------+------------+----------------------+-------------+------------+----------+---------------+--------------+------------+-------+----------------------------------+
+TESTDB       |PUBLIC      |PRIMARY_KEY_8         |TESTDB       |PUBLIC      |ORDERS    |PRIMARY KEY    |              |true        |       |org.h2.mvstore.db.MVDelegateIndex |
+TESTDB       |PUBLIC      |CONSTRAINT_INDEX_8    |TESTDB       |PUBLIC      |ORDERS    |INDEX          |              |true        |       |org.h2.mvstore.db.MVSecondaryIndex|
+TESTDB       |PUBLIC      |PRIMARY_KEY_1         |TESTDB       |PUBLIC      |FOO       |PRIMARY KEY    |              |true        |       |org.h2.mvstore.db.MVDelegateIndex |
+TESTDB       |PUBLIC      |UQ_FOO_INDEX_1        |TESTDB       |PUBLIC      |FOO       |UNIQUE INDEX   |YES           |true        |       |org.h2.mvstore.db.MVSecondaryIndex|
+TESTDB       |PUBLIC      |PRIMARY_KEY_4         |TESTDB       |PUBLIC      |USERS     |PRIMARY KEY    |              |true        |       |org.h2.mvstore.db.MVDelegateIndex |
+TESTDB       |PUBLIC      |UQ_USERS_EMAIL_INDEX_4|TESTDB       |PUBLIC      |USERS     |UNIQUE INDEX   |YES           |true        |       |org.h2.mvstore.db.MVSecondaryIndex|
+
+
+// Select on INDEX_COLUMNS with a JOIN on INDEXES to get INDEX_TYPE_NAME
+SELECT 
+  ic.TABLE_CATALOG, ic.TABLE_SCHEMA, ic.TABLE_NAME,
+  ic.INDEX_NAME,
+  ic.ORDINAL_POSITION, ic.COLUMN_NAME, 
+  i.INDEX_TYPE_NAME
+FROM 
+  INFORMATION_SCHEMA.INDEX_COLUMNS ic
+JOIN 
+  INFORMATION_SCHEMA.INDEXES i
+  ON  ic.INDEX_CATALOG = i.INDEX_CATALOG 
+  AND ic.INDEX_SCHEMA = i.INDEX_SCHEMA
+  AND ic.INDEX_NAME = i.INDEX_NAME
+ORDER BY 
+  ic.TABLE_CATALOG, ic.TABLE_SCHEMA, ic.TABLE_NAME,
+  ic.INDEX_NAME,
+  ic.ORDINAL_POSITION;
+  
+  
+TABLE_CATALOG|TABLE_SCHEMA|TABLE_NAME|INDEX_NAME            |ORDINAL_POSITION|COLUMN_NAME|INDEX_TYPE_NAME|
+-------------+------------+----------+----------------------+----------------+-----------+---------------+
+TESTDB       |PUBLIC      |FOO       |PRIMARY_KEY_1         |               1|ID         |PRIMARY KEY    |
+TESTDB       |PUBLIC      |FOO       |UQ_FOO_INDEX_1        |               1|V1         |UNIQUE INDEX   |
+TESTDB       |PUBLIC      |FOO       |UQ_FOO_INDEX_1        |               2|V2         |UNIQUE INDEX   |
+TESTDB       |PUBLIC      |ORDERS    |CONSTRAINT_INDEX_8    |               1|USER_ID    |INDEX          |
+TESTDB       |PUBLIC      |ORDERS    |PRIMARY_KEY_8         |               1|ID         |PRIMARY KEY    |
+TESTDB       |PUBLIC      |USERS     |PRIMARY_KEY_4         |               1|ID         |PRIMARY KEY    |
+TESTDB       |PUBLIC      |USERS     |UQ_USERS_EMAIL_INDEX_4|               1|EMAIL      |UNIQUE INDEX   |
+

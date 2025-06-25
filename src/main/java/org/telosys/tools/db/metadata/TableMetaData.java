@@ -30,7 +30,6 @@ public class TableMetaData
 	
 	private String comment ; // explanatory comment on the table 
 
-	//----------------------------------------------------------------------------------
 	public TableMetaData(String tableName, String tableType, String catalogName, String schemaName, String comment) {
 		super();
 		this.tableName = tableName;
@@ -40,49 +39,24 @@ public class TableMetaData
 		this.comment = comment;
 	}
 
-	//----------------------------------------------------------------------------------
 	public String getTableName() {
 		return tableName;
 	}
 
-//	public void setTableName(String tableName) {
-//		this.tableName = tableName;
-//	}
-	
-	//----------------------------------------------------------------------------------
 	public String getCatalogName() {
 		return catalogName;
 	}
 
-//	public void setCatalogName(String catalogName) {
-//		this.catalogName = catalogName;
-//	}
-
-	//----------------------------------------------------------------------------------
 	public String getComment() {
 		return comment;
 	}
 
-//	public void setComment(String comment) {
-//		this.comment = comment;
-//	}
-
-	//----------------------------------------------------------------------------------
 	public String getSchemaName() {
 		return schemaName;
 	}
 
-//	public void setSchemaName(String schemaName) {
-//		this.schemaName = schemaName;
-//	}
-
-	//----------------------------------------------------------------------------------
 	public String getTableType() {
 		return tableType;
 	}
 
-//	public void setTableType(String tableType) {
-//		this.tableType = tableType;
-//	}
-	
 }
